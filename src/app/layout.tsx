@@ -4,7 +4,7 @@ export const metadata = {
 }
 
 import '../index.css'
-
+import NavBar from '@/components/NavBar'
 export default function RootLayout({
   children,
 }: {
@@ -12,7 +12,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className='bg-background font-sans'>
-      <body>{children}</body>
+      <body>
+        <NavBar />
+        {children}
+      </body>
     </html>
   )
 }

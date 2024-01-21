@@ -1,0 +1,9 @@
+.navbar{
+    @apply flex flex-col flex-wrap justify-center sm:flex-row sm:justify-between p-10 bg-primary text-gray-100 gap-y-4
+}
+.navbar-left{
+    @apply text-4xl font-bold justify-center
+}
+.navbar-right{
+    @apply flex flex-row flex-wrap gap-7 text-2xl font-medium justify-center
+}
