@@ -1,36 +1,55 @@
 "use client"
 
-import BoardEntry from '@/components/boardEntry/BoardEntry'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { defaultBoard } from './util'
 import { PrimaryButton } from '@/components/Buttons'
 import './Create.css'
-import { BsDash, BsPatchMinus, BsPlus } from 'react-icons/bs'
+import { BsDash, BsPlus } from 'react-icons/bs'
+import Column from './Column'
+
+interface BoardObj {
+    [key: number]: {
+        [key: string]: any
+    }
+}
+
 
 const Create = () => {
+    const MAXCOL = 9
     const [cols, setCols] = useState<number>(5)
-    const [cards, setCards] = useState<React.ReactNode[]>([])
+    const [boardInfo, setBoardInfo] = useState<BoardObj>(defaultBoard);
     const [numOfBoards, setnumOfBoards] = useState<number>(2)
 
-    useEffect(() => {
-
-        const col = []
-        let i = 0
-        for (let [_, topic] of Object.entries(defaultBoard)) {
-            col.push(
-                <div className='flex flex-col' key={i}>
-                    {Object.entries(topic).map(([key, val], idx) => <BoardEntry style={key === 'topic' ? { 'flexGrow': 1 } : {}} title={key === 'topic' ? topic[key] : topic[key as keyof typeof val]['value']} key={idx}></BoardEntry>)
-                    }
-                </div >
-            )
-            i += 1
+    const removeCard = (idx: number) => {
+        return (e: React.MouseEvent) => {
+            const newBoard: BoardObj = {}
+            let i = 0;
+            for (let [key, val] of Object.entries(boardInfo)) {
+                console.log(key, idx.toString())
+                if (key !== idx.toString()) {
+                    newBoard[i] = val
+                    i += 1
+                }
+            }
+            console.log(newBoard)
+            setBoardInfo(newBoard);
+            setCols(cols - 1);
         }
-        setCards(col);
-        console.log(col);
-    }, [])
+    }
+    const addCol = () => {
+        return (e: React.MouseEvent) => {
+            if (cols >= MAXCOL) return;
+            const newBoard: BoardObj = { ...boardInfo }
+            newBoard[cols] = defaultBoard[1];
+            console.log(newBoard);
+            setBoardInfo(newBoard);
+            setCols(cols + 1)
+        }
+    }
+    const addRow = () => {
+        return (e: React.MouseEvent) => {
 
-    const editCard = () => {
-
+        }
     }
     const removeBoard = () => {
         if (numOfBoards > 0) {
@@ -57,12 +76,11 @@ const Create = () => {
 
     return (
         <div className='p-12 flex flex-col items-center sm:block transition-all duration-100'>
-            <div className='flex flex-col items-center gap-y-8'>
+            <div className='flex flex-col items-center gap-y-8 mb-8'>
                 <h1 className='text-3xl font-bold'>TITLE</h1>
                 <div className='flex gap-8 flex-wrap justify-center'>
                     <PrimaryButton>Save?</PrimaryButton>
                     <div className="inline-flex rounded-md shadow-sm" role="group">
-
                         <button type="button" className="button-group rounded-s-md" onClick={removeBoard}>
                             <BsDash className='text-lg' />
                         </button>
@@ -75,9 +93,12 @@ const Create = () => {
                 </div>
             </div>
             <div className='relative'>
-                <div className='absolute w-full h-full mx-auto bg-third z-10 text-white opacity-95 invisible'> yup cock</div>
-                <div className={`grid grid-cols-${cols} p-4 max-w-screen-xl min-w-[600px] scale-50 sm:mx-auto sm:scale-100 transition`}>
-                    {cards}
+                <div className='flex justify-center gap-4'>
+                    <button className='button-group rounded-md' onClick={addCol()}>Add Col +</button>
+                    <button className='button-group rounded-md' onClick={addRow()}>Add Row +</button>
+                </div>
+                <div className={`grid p-4 mx-auto min-w-[900px] scale-75 sm:mx-auto sm:scale-100 transition`} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+                    {Object.entries(boardInfo).map(([key, val]) => <Column id={Number.parseInt(key)} removeCard={removeCard} topic={val} cols={cols} key={key} />)}
                 </div>
             </div>
         </div>
