@@ -20,7 +20,7 @@ const Create = () => {
     const [boardInfo, setBoardInfo] = useState<BoardObj>(defaultBoard);
     const [numOfBoards, setnumOfBoards] = useState<number>(2)
 
-    const removeCard = (idx: number) => {
+    const removeCol = (idx: number) => {
         return (e: React.MouseEvent) => {
             const newBoard: BoardObj = {}
             let i = 0;
@@ -34,6 +34,12 @@ const Create = () => {
             console.log(newBoard)
             setBoardInfo(newBoard);
             setCols(cols - 1);
+        }
+    }
+    const removeRow = () => {
+
+        return (e: React.MouseEvent) => {
+            
         }
     }
     const addCol = () => {
@@ -98,7 +104,7 @@ const Create = () => {
                     <button className='button-group rounded-md' onClick={addRow()}>Add Row +</button>
                 </div>
                 <div className={`grid p-4 mx-auto min-w-[900px] scale-75 sm:mx-auto sm:scale-100 transition`} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
-                    {Object.entries(boardInfo).map(([key, val]) => <Column id={Number.parseInt(key)} removeCard={removeCard} topic={val} cols={cols} key={key} />)}
+                    {Object.entries(boardInfo).map(([key, val]) => <Column id={Number.parseInt(key)} removeCol={removeCol} topic={val} isEndCol={(cols - 1).toString() === key} key={key} removeRow={removeRow} />)}
                 </div>
             </div>
         </div>
