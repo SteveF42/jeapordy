@@ -1,26 +1,24 @@
-"use client"
-
-import React from 'react'
 import { PrimaryButton, SecondaryButton } from '../components/Buttons'
-import { useRouter } from 'next/navigation'
+import { randText } from '@/hooks/useRandTitle'
+import Link from 'next/link'
 
-const HomePage = () => {
-    const router = useRouter();
-    const goLogin = () => {
-        router.push('/login')
-    }
-
-    const goSignUp = () => {
-        router.push('/register')
-    }
-
+const HomePage = async () => {
+    const s = await randText();
     return (
         <div className='font-mono h-[70vh] flex justify-center items-center'>
             <div className='flex flex-col justify-center items-center'>
-                <h1 className='text-4xl sm:text-5xl font-bold mb-4 text-center'>EJPAORDY!</h1>
+                <h1 className='text-4xl sm:text-5xl font-bold mb-4 text-center'>{s}!</h1>
                 <div className='flex space-x-4'>
-                    <PrimaryButton onClick={goLogin}>Login</PrimaryButton>
-                    <SecondaryButton onClick={goSignUp}>Sign Up</SecondaryButton>
+                    <Link href='/login'>
+                        <PrimaryButton>
+                            Login
+                        </PrimaryButton>
+                    </Link>
+                    <Link href='/register'>
+                        <SecondaryButton>
+                            Sign Up
+                        </SecondaryButton>
+                    </Link>
                 </div>
             </div>
         </div>

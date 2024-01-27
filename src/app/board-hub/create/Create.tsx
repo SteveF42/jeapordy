@@ -11,20 +11,24 @@ import Column from './Column'
 
 
 const Create = () => {
-    const MAXCOL = 9
+    const MAXCOL = 9;
     const [cols, setCols] = useState<number>(5);
     const [boardInfo, setBoardInfo] = useState<BoardObj>(JSON.parse(JSON.stringify(defaultBoard)));
+    const [boardArr, setBoardArr] = useState<BoardObj[]>([boardInfo, JSON.parse(JSON.stringify(defaultBoard))]);
     const [numOfBoards, setnumOfBoards] = useState<number>(2);
+
 
     const removeCol = (idx: number) => {
         return (e: React.MouseEvent) => {
-            const newBoard: BoardObj = {}
+            const newBoard: BoardObj = boardInfo
             let i = 0;
+            console.log(newBoard, idx)
             for (let [key, val] of Object.entries(boardInfo)) {
-                console.log(key, idx.toString())
+
+                delete newBoard[key]
                 if (key !== idx.toString()) {
-                    newBoard[i] = { ...val }
-                    i += 1
+                    newBoard[i] = val;
+                    i += 1;
                 }
             }
             setBoardInfo(newBoard);
@@ -43,7 +47,7 @@ const Create = () => {
     const addCol = () => {
         return (e: React.MouseEvent) => {
             if (cols >= MAXCOL) return;
-            const newBoard: BoardObj = { ...boardInfo }
+            const newBoard: BoardObj = boardInfo
             if (boardInfo[0] === undefined) {
                 newBoard[cols] = JSON.parse(JSON.stringify(defaultBoard[0]));
             } else {
@@ -61,19 +65,29 @@ const Create = () => {
                 let length: number = Object.keys(val.board).length;
                 const newEntry = defaultBoard[0].board[0];
                 const idxToInsert = binarySearch((idx: number) => val.board[idx].value, length, newEntry.value)
-                val.board.splice(idxToInsert,0,newEntry);
+                val.board.splice(idxToInsert, 0, newEntry);
             }
             setBoardInfo(newBoard);
         }
     }
     const removeBoard = () => {
-        if (numOfBoards > 0) {
+        if (numOfBoards > 1) {
             setnumOfBoards(numOfBoards - 1)
+            boardArr.pop()
+            setBoardArr([...boardArr])
         }
     }
     const addBoard = () => {
         if (numOfBoards < 3) {
             setnumOfBoards(numOfBoards + 1)
+            setBoardArr([...boardArr,JSON.parse(JSON.stringify(defaultBoard))]);
+        }
+    }
+    const changeBoard = (idx: number) => {
+        return (e: React.FormEvent<HTMLButtonElement>) => {
+            const length = Object.keys(boardArr[idx]).length
+            setBoardInfo(boardArr[idx])
+            setCols(length);
         }
     }
 
@@ -81,12 +95,25 @@ const Create = () => {
         const elems = []
         for (let i = 0; i < numOfBoards; i++) {
             elems.push(
-                <button type="button" className="button-group border-t border-b" id={'board-' + i} key={i}>
+                <button type="button" className="button-group border-t border-b" id={'board-' + i} key={i} onClick={changeBoard(i)}>
                     Board {i + 1}
                 </button>
             )
         }
         return elems
+    }
+
+    const changeTitle = (colIdx: number) => {
+        return (e: React.FormEvent<HTMLTextAreaElement>) => {
+            const text = e.currentTarget.value;
+            boardInfo[colIdx].topic = text;
+            setBoardInfo({ ...boardInfo });
+        }
+    }
+    const editCard = (row: number) => {
+        return (e: React.MouseEvent) => {
+
+        }
     }
 
     return (
@@ -108,12 +135,15 @@ const Create = () => {
                 </div>
             </div>
             <div className='relative'>
+                <div className='z-10 absolute bg-third w-full h-full scale-0 opacity-95 transition duration-100'>
+
+                </div>
                 <div className='flex justify-center gap-4'>
                     <button className='button-group rounded-md' onClick={addCol()}>Add Col +</button>
                     <button className='button-group rounded-md' onClick={addRow()}>Add Row +</button>
                 </div>
                 <div className={`grid p-4 mx-auto min-w-[900px] scale-75 sm:mx-auto sm:scale-100 transition`} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
-                    {Object.entries(boardInfo).map(([key, val]) => <Column id={Number.parseInt(key)} removeCol={removeCol} colInfo={val} isEndCol={(cols - 1).toString() === key} key={key} removeRow={removeRow} />)}
+                    {Object.entries(boardInfo).map(([key, val]) => <Column id={Number.parseInt(key)} removeCol={removeCol} colInfo={val} isStartCol={key === (0).toString()} isEndCol={(cols - 1).toString() === key} key={key} editCard={editCard} removeRow={removeRow} changeTitle={changeTitle} />)}
                 </div>
             </div>
         </div>

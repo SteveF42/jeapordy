@@ -2,6 +2,7 @@
 import { BsDash, BsPlus } from 'react-icons/bs'
 import BoardEntry from '@/components/boardEntry/BoardEntry'
 import { BoardObj } from './util'
+import { useState } from 'react'
 
 
 type props = {
@@ -9,11 +10,20 @@ type props = {
     id: number,
     removeCol: any,
     removeRow: any,
+    editCard: any,
     isEndCol: boolean,
+    isStartCol: boolean,
+    changeTitle: any,
 }
 
-const Column = ({ colInfo, id, removeCol, removeRow, isEndCol }: props) => {
+const Column = ({ colInfo, id, removeCol, removeRow, editCard, isEndCol, changeTitle }: props) => {
     // I KNOW THIS IS REALLY MESSY BUT ITS JUST HOW IT HAS TO WORK LEAVE ME ALONE :(
+
+    const captureKey = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault()
+        }
+    }
 
     return (
         <div id={`${id}`} className='flex flex-col transition group/main z-10'>
@@ -23,7 +33,9 @@ const Column = ({ colInfo, id, removeCol, removeRow, isEndCol }: props) => {
                     Remove Column
                 </span>
             </div>
-            <BoardEntry style={{ height: '100%' }} title={colInfo.topic} />
+            <BoardEntry style={{ height: '100%' }}>
+                <textarea className='bg-transparent h-full w-full resize-none text-center px-1.5 py-2.5 overflow-clip' maxLength={90} onChange={changeTitle(id)} key={id} value={colInfo.topic} onKeyDownCapture={captureKey} title={colInfo.topic}></textarea>
+            </BoardEntry>
             {colInfo.board.map((val, idx) => {
                 return (
                     <div className={`relative group/second`} key={idx}>
@@ -35,7 +47,7 @@ const Column = ({ colInfo, id, removeCol, removeRow, isEndCol }: props) => {
                                 </span>
                             </div>
                         }
-                        <BoardEntry style={{ height: '100%' }} title={val.value} key={idx}></BoardEntry>
+                        <BoardEntry style={{ height: '100%' }} key={idx} cardInfo={val} onClick={editCard}>{val.value}</BoardEntry>
                     </div>
                 )
             })}
