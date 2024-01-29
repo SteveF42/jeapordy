@@ -1,4 +1,7 @@
-const randText = async () => {
+import { unstable_noStore } from "next/cache";
+
+const randText = () => {
+    unstable_noStore()
     const chars = ['j', 'e', 'a', 'p', 'o', 'r', 'd', 'y']
     const len = chars.length;
     for (let i = len - 1; i > 0; i--) {

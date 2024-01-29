@@ -3,6 +3,7 @@ import { BsDash, BsPlus } from 'react-icons/bs'
 import BoardEntry from '@/components/boardEntry/BoardEntry'
 import { BoardObj } from './util'
 import { useState } from 'react'
+import { PrimaryButton } from '@/components/Buttons'
 
 
 type props = {
@@ -10,18 +11,17 @@ type props = {
     id: number,
     removeCol: any,
     removeRow: any,
-    editCard: any,
+    updateCard: (col: number, row: number) => void,
     isEndCol: boolean,
-    isStartCol: boolean,
     changeTitle: any,
 }
 
-const Column = ({ colInfo, id, removeCol, removeRow, editCard, isEndCol, changeTitle }: props) => {
+const Column = ({ colInfo, id, removeCol, removeRow, updateCard, isEndCol, changeTitle }: props) => {
     // I KNOW THIS IS REALLY MESSY BUT ITS JUST HOW IT HAS TO WORK LEAVE ME ALONE :(
 
     const captureKey = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-            e.preventDefault()
+            e.preventDefault();
         }
     }
 
@@ -47,7 +47,7 @@ const Column = ({ colInfo, id, removeCol, removeRow, editCard, isEndCol, changeT
                                 </span>
                             </div>
                         }
-                        <BoardEntry style={{ height: '100%' }} key={idx} cardInfo={val} onClick={editCard}>{val.value}</BoardEntry>
+                        <BoardEntry style={{ height: '100%' }} key={idx} cardInfo={val} onClick={updateCard(idx,id)}>{val.value}</BoardEntry>
                     </div>
                 )
             })}

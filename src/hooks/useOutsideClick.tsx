@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef, MutableRefObject } from 'react'
+import { useEffect, useState, useRef, MutableRefObject, ReactHTMLElement } from 'react'
 
 
-const useOutsideClick = (ref : MutableRefObject<HTMLElement>) => {
+const useOutsideClick = (ref: React.RefObject<HTMLElement>) => {
     const [isVisible, setIsVisible] = useState(false);
     useEffect(() => {
-        const handleClick = (event : any) => {
+        const handleClick = (event: any) => {
             if (ref.current && !ref.current.contains(event.target)) {
                 setIsVisible(false);
             }

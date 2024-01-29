@@ -5,7 +5,8 @@ export const metadata = {
 
 import '../index.css'
 import NavBar from '@/components/NavBar'
-export default function RootLayout({
+import { randText } from '@/hooks/useRandTitle'
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -13,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" className='bg-background font-sans'>
       <body>
-        <NavBar />
+        <NavBar navTitle={randText()}/>
         {children}
       </body>
     </html>

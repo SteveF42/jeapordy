@@ -3,16 +3,15 @@ import React, { useEffect, useState } from 'react'
 import './NavBar.css'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { randText } from '@/hooks/useRandTitle'
 
 
-const NavBar = () => {
+const NavBar = ({ navTitle }: { navTitle: string }) => {
     const pathName = usePathname();
 
     return (
         <div className='navbar'>
             <div className="navbar-left">
-                <h1 className='text-center hover:-translate-y-1'><Link href='/'> Jepaoryd </Link></h1>
+                <h1 className='text-center hover:-translate-y-1'><Link href='/'> {navTitle} </Link></h1>
             </div>
 
             <div className='navbar-right'>

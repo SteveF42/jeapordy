@@ -26,51 +26,51 @@ const defaultBoard = {
     0: {
         topic: 'This one has a really long title for reason, what happens?',
         board: [
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
+            { answer: '0,0', question: 'text here idk', img: 'some src', value: 100 },
+            { answer: '0,1', question: 'text here idk', img: 'some src', value: 200 },
+            { answer: '0,22', question: 'text here idk', img: 'some src', value: 400 },
+            { answer: '0,3', question: 'text here idk', img: 'some src', value: 800 },
+            { answer: '0,4', question: 'text here idk', img: 'some src', value: 1000 },
         ]
     },
     1: {
         topic: 'Title 2',
         board: [
-            { answer:'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
-            { answer:'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
-            { answer:'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
-            { answer:'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
-            { answer:'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
         ]
     },
     2: {
         topic: 'This is something for the thingy',
         board: [
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
         ]
     },
     3: {
         topic: 'This is another title',
         board: [
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
         ]
     },
     4: {
         topic: 'XBOX XBOX XBOX XBOX XBOX XBOX XBOX XBOX ',
         board: [
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
-            {answer:'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 100 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 200 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 400 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 800 },
+            { answer: 'some more text lol', question: 'text here idk', img: 'some src', value: 1000 },
         ]
     },
 }

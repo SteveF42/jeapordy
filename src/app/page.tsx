@@ -2,8 +2,8 @@ import { PrimaryButton, SecondaryButton } from '../components/Buttons'
 import { randText } from '@/hooks/useRandTitle'
 import Link from 'next/link'
 
-const HomePage = async () => {
-    const s = await randText();
+const HomePage =  () => {
+    const s = randText();
     return (
         <div className='font-mono h-[70vh] flex justify-center items-center'>
             <div className='flex flex-col justify-center items-center'>

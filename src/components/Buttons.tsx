@@ -8,7 +8,7 @@ type props = {
 
 const PrimaryButton = (props: any) => {
     return (
-        <button {...props} className={`text-center font-bold bg-primary text-gray-100 shadow-lg rounded-lg hover:bg-third px-6 py-3`}>
+        <button {...props} className={`text-center font-bold bg-primary text-gray-100 shadow-lg rounded-lg hover:opacity-80 px-6 py-3`}>
             {props.children}
         </button>
     )
@@ -16,7 +16,7 @@ const PrimaryButton = (props: any) => {
 
 const SecondaryButton = (props: any) => {
     return (
-        <button {...props} className={`text-center font-bold bg-secondary text-gray-100 shadow-lg rounded-lg hover:bg-third px-6 py-3`}>
+        <button {...props} className={`text-center font-bold bg-secondary text-gray-100 shadow-lg rounded-lg hover:opacity-80 px-6 py-3`}>
             {props.children}
         </button>
     )
