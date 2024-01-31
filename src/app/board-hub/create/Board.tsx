@@ -117,17 +117,17 @@ const Board = () => {
             setDisplayCardSettings(!displayCardSettings)
         }
     }
-    const updateCardInfo = () => {
-        return (e: React.MouseEvent) => {
-            setDisplayCardSettings(!displayCardSettings)
-        }
+    const updateDisplay = () => {
+        setDisplayCardSettings(!displayCardSettings)
     }
 
 
     return (
         <>
             <div className='flex flex-col items-center gap-y-8 mb-8'>
-                <h1 className='text-3xl font-bold'>TITLE</h1>
+                <h1 className='text-3xl font-bold'>
+                    <input type="text" defaultValue={"Title"} className='text-center bg-transparent' maxLength={23}/>
+                </h1>
                 <div className='flex gap-8 flex-wrap justify-center'>
                     <PrimaryButton>Save?</PrimaryButton>
                     <div className="inline-flex rounded-md shadow-sm" role="group">
@@ -143,14 +143,24 @@ const Board = () => {
             </div>
             <div className='relative' ref={settingsOverlayRef}>
                 <div className={`absolute text-white p-8 rounded-md z-20 bg-third w-full h-full ${displayCardSettings ? 'scale-100' : 'scale-0'} opacity-95 transition duration-100`}>
-                    <SettingsOverlay boardInfo={boardInfo} cardIdx={cardIdx} updateCard={updateCardInfo} setBoardInfo={setBoardInfo} />
+                    <SettingsOverlay boardInfo={boardInfo} cardIdx={cardIdx} updateDisplay={updateDisplay} setBoardInfo={setBoardInfo} />
                 </div>
                 <div className='flex justify-center gap-4'>
                     <button className='button-group rounded-md' onClick={addCol()}>Add Col +</button>
                     <button className='button-group rounded-md' onClick={addRow()}>Add Row +</button>
                 </div>
                 <div className={`grid p-4 mx-auto min-w-[900px] scale-75 sm:mx-auto sm:scale-100 transition`} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
-                    {Object.entries(boardInfo).map(([key, val]) => <Column id={Number.parseInt(key)} removeCol={removeCol} colInfo={val} isEndCol={(cols - 1).toString() === key} key={key} updateCard={displayCard} removeRow={removeRow} changeTitle={changeTitle} />)}
+                    {Object.entries(boardInfo).map(([key, val]) =>
+                        <Column
+                            id={Number.parseInt(key)}
+                            removeCol={removeCol}
+                            colInfo={val}
+                            isEndCol={(cols - 1).toString() === key}
+                            key={key}
+                            updateCard={displayCard}
+                            removeRow={removeRow}
+                            changeTitle={changeTitle} />
+                    )}
                 </div>
             </div >
         </>

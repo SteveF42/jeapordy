@@ -5,11 +5,11 @@ import { SetStateAction, TextareaHTMLAttributes, useEffect, useState } from "rea
 type props = {
     boardInfo: BoardObj,
     cardIdx: number[],
-    updateCard: () => void,
+    updateDisplay: () => void,
     setBoardInfo: any;
 }
 
-const SettingsOverlay = ({ boardInfo, cardIdx, updateCard, setBoardInfo }: props) => {
+const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo }: props) => {
     const [cardValue, setCardValue] = useState<number>(0);
     const [cardQuestion, setCardQuestion] = useState<string>('');
     const [cardAnswer, setCardAnswer] = useState<string>('');
@@ -30,8 +30,17 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateCard, setBoardInfo }: props
     }
 
     const updateCardEntry = () => {
+        const card = boardInfo[cardIdx[1]].board[cardIdx[0]]
+        card.answer = cardAnswer;
+        card.question = card.question
+        card.value = cardValue
+        for (let [key, val] of Object.entries(boardInfo)) {
+            val.board[cardIdx[0]].value = cardValue;
+            val.board.sort((a, b) => a.value - b.value)
+        }
 
-        updateCard();
+        setBoardInfo(boardInfo);
+        updateDisplay();
     }
 
     return (
@@ -53,7 +62,7 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateCard, setBoardInfo }: props
                 <input id="card-cost" className='text-black rounded-md p-2 text-center' type='number' value={cardValue} min='1' step={1} onChange={updateText(setCardValue)} />
                 <p>Note: this changes the value for the whole row</p>
             </div>
-            <PrimaryButton style={{ width: '20%' }} onClick={updateCardEntry()}>Save?</PrimaryButton>
+            <PrimaryButton style={{ width: '20%' }} onClick={updateCardEntry}>Save?</PrimaryButton>
         </div>
     )
 }

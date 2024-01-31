@@ -1,9 +1,36 @@
+"use client"
 import { PrimaryButton, SecondaryButton } from '@/components/Buttons'
-import React from 'react'
+import React, { useState } from 'react'
 import { InputSecondary } from '@/components/Inputs'
 import Link from 'next/link'
+import { DiscordSignInButton } from '@/components/AuthButtons'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 const LogIn = () => {
+    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
+    const router = useRouter();
+
+    const updateInput = (setParam: React.Dispatch<React.SetStateAction<string>>) => {
+        return (e: React.FormEvent<HTMLInputElement>) => {
+            const text = e.currentTarget.value;
+            setParam(text);
+        }
+    }
+
+    const login = async (e:any) => {
+        e.preventDefault();
+        const res = await signIn('credentials', {
+            username,
+            password,
+            redirect: false
+        })
+        if(res?.ok){
+            router.push('/')
+        }
+    }
+
     return (
         <div className='h-screen flex items-center justify-center text-white'>
             <div className='flex flex-col space-y-8 bg-white rounded-xl min-w-64 max-w-md p-10 w-full'>
@@ -14,15 +41,18 @@ const LogIn = () => {
                 <form className='flex flex-col space-y-4'>
                     <div className="sm:col-span-3">
                         <div className="mt-2">
-                            <InputSecondary placeholder="Username" type="password" />
+                            <InputSecondary placeholder="Username" type="text" onChange={updateInput(setUsername)} />
                         </div>
                         <div className="sm:col-span-3">
                             <div className="mt-2">
-                                <InputSecondary placeholder="Password" type="password"></InputSecondary>
+                                <InputSecondary placeholder="Password" type="password" onChange={updateInput(setPassword)} />
                             </div>
                         </div>
                     </div>
-                    <SecondaryButton>Log In</SecondaryButton>
+                    <SecondaryButton onClick={login}>Log In</SecondaryButton>
+                    <span className='text-gray-500'>Register an account <Link href={'/register'}>HERE</Link></span>
+                    <span className='text-lg text-gray-500 font-semibold border-b-2 text-center'>or</span>
+                    <DiscordSignInButton />
                 </form>
             </div>
         </div>

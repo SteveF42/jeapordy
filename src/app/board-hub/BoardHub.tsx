@@ -5,26 +5,39 @@ import { InputSecondary } from '@/components/Inputs';
 import { MutableRefObject, useRef, useState } from 'react'
 import { BsPlus, BsX } from 'react-icons/bs';
 import useOutSideClick from '@/hooks/useOutsideClick'
+import { AuthProvider } from '@/components/AuthProvider';
 
 const BoardHub = () => {
     //API call will populate this later on
     const [myBoards, setMyBoards] = useState([]);
+    const [newBoardTitle, setNewBoardTitle] = useState('')
+
     const overlayRef = useRef<any>(null)
     const { isVisible: showOverlay, setIsVisible: setShowOverlay } = useOutSideClick(overlayRef);
     const tempBoard = {
         title: 'skibiddy toilet',
         date: '02/28/2024'
     }
+    const changeTitle = () => {
+
+        return (e: React.FormEvent<HTMLInputElement>) => {
+            const text = e.currentTarget.value;
+            setNewBoardTitle(text)
+        }
+    }
+    const createNewBoard = () => {
+        //send redirect 
+    }
 
     return (
-        <>
+        <AuthProvider>
             <div className={`${showOverlay ? "visible" : "invisible"} absolute flex flex-col z-10 mx-auto justify-center w-full h-2/3 items-center`}>
                 <div className='flex relative flex-col gap-y-4 opacity-95 bg-gray-700 p-8 rounded-md text-white max-w-sm min-w-[20rem]' ref={overlayRef}>
                     <div className='absolute right-4 top-4 rounded-full hover:bg-slate-950 hover:cursor-pointer p-1'>
                         <BsX onClick={() => setShowOverlay(false)} />
                     </div>
                     <h1 className='text-2xl'>Create New Board</h1>
-                    <InputSecondary placeholder="Title"></InputSecondary>
+                    <InputSecondary placeholder="Title" value={newBoardTitle} onChange={changeTitle()}></InputSecondary>
                     <button className='bg-secondary p-2 flex flex-row items-center gap-1 rounded-md hover:bg-third text-white font-semibold mb-2'>Create</button>
                 </div>
             </div>
@@ -52,7 +65,7 @@ const BoardHub = () => {
                     <BoardCard board={tempBoard} />
                 </div>
             </div>
-        </>
+        </AuthProvider>
     )
 
 }
