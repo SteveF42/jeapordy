@@ -1,10 +1,13 @@
 import React from 'react'
 import BoardHub from './BoardHub'
+import { getUserCreatedBoards } from './util'
+import { getServerSession } from 'next-auth';
 
-const page = () => {
-  
+const page = async () => {
+  const userData = await getUserCreatedBoards();
+
   return (
-    <BoardHub></BoardHub>
+    <BoardHub userGames={userData.games}></BoardHub>
   )
 }
 

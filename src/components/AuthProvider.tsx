@@ -1,15 +1,13 @@
-import { createContext, useState } from "react";
+import React from 'react'
 
-const AuthContext = createContext({});
+import { SessionProvider } from 'next-auth/react'
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [auth, setAuth] = useState({});
-
+const AuthProvider = ({children}: {children : React.ReactNode}) => {
     return (
-        <AuthContext.Provider value={{ auth, setAuth }}>
+        <SessionProvider>
             {children}
-        </AuthContext.Provider>
+        </SessionProvider>
     )
 }
 
-export default AuthContext;
+export default AuthProvider

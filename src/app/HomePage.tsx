@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 const HomePage = () => {
     const s = randText();
+    
     return (
         <div className='font-mono h-[70vh] flex justify-center items-center'>
             <div className='flex flex-col justify-center items-center'>
