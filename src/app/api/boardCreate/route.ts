@@ -7,7 +7,6 @@ import { NextRequest } from "next/server";
 
 
 export async function POST(req: NextRequest) {
-    await dbConnect();
     const session = await getServerSession();
     if (!session) {
         return new Response("Denied", { status: 401 })
@@ -19,12 +18,11 @@ export async function POST(req: NextRequest) {
         author: session.user?.name
     })
     gameInfo.save();
-    revalidatePath('/api/boardCreate')
+    revalidatePath('/')
     return Response.json(gameInfo, { status: 201 })
 }
 
 export async function GET(req: Request) {
-    await dbConnect();
     const session = await getServerSession(options);
     if (!session)
         return Response.json({ status: "Denied" }, { status: 401 });

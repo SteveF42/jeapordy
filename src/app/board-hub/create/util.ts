@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth"
+
 interface BoardObj {
     columns: {
         colTitle: string,
@@ -10,6 +12,16 @@ interface BoardObj {
         }[]
     }[]
 }
+export interface GameObj {
+    gameInfo: {
+        [key: string | number]: any,
+        author: string,
+        lastModified: string,
+        title: string,
+        boards: BoardObj[],
+        _id: string,
+    }
+}
 
 export const getBoardInfo = async (id: String) => {
     const res = await fetch('http://localhost:3000/api/board/' + id, {
@@ -20,6 +32,24 @@ export const getBoardInfo = async (id: String) => {
         return { board: undefined }
     }
     return await res.json();
+}
+export const updateBoardInDB = async ({ gameInfo }: GameObj) => {
+    const res = await fetch('/api/board/' + gameInfo._id, {
+        method: "PATCH",
+        credentials: "include",
+        body: JSON.stringify(gameInfo),
+    });
+    return await res.json();
+}
+export const createNewBoard = async (id: string): Promise<BoardObj> => {
+    // const session = await getServerSession();
+    const res = await fetch('/api/board/' + id, {
+        method: 'POST',
+        body: JSON.stringify({
+            // name: session?.user?.name
+        })
+    })
+    return await res.json()
 }
 
 const binarySearch = (cb: (idx: number) => number, length: number, value: number) => {

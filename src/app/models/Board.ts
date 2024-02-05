@@ -40,11 +40,6 @@ const columnSchema = new Schema({
 const column = mongoose.models.column || mongoose.model("column", columnSchema);
 
 const boardSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
-        default: 'Board Title'
-    },
     columns: {
         type: [columnSchema],
         required: true,

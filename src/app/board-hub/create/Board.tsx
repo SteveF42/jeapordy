@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
-import { defaultBoard, BoardObj, binarySearch } from './util'
+import { defaultBoard, BoardObj, binarySearch, GameObj, updateBoardInDB, createNewBoard } from './util'
 import { PrimaryButton } from '@/components/Buttons'
 import './Create.css'
 import { BsDash, BsPlus } from 'react-icons/bs'
@@ -9,23 +9,13 @@ import { InputSecondary } from '@/components/Inputs'
 import useOutsideClick from '@/hooks/useOutsideClick'
 import SettingsOverlay from './SettingsOverlay'
 
-type GameObj = {
-    gameInfo: {
-        [key: string | number]: any,
-        author: string,
-        lastModified: string,
-        title: string,
-        boards: [BoardObj],
-        _id: string,
-    }
-}
-
 const Board = ({ gameInfo }: GameObj) => {
     const MAXCOL = 9;
     const [cols, setCols] = useState<number>(5);
     const [boardInfo, setBoardInfo] = useState<BoardObj>(gameInfo.boards[0]);
     const [boardArr, setBoardArr] = useState<BoardObj[]>([...gameInfo.boards]);
     const [numOfBoards, setnumOfBoards] = useState<number>(gameInfo.boards.length);
+    const [boardTitle, setBoardTitle] = useState(gameInfo.title)
     const [cardIdx, setCardIdx] = useState([0, 0]) //[row, col]
     const settingsOverlayRef = useRef(null)
     const { isVisible: displayCardSettings, setIsVisible: setDisplayCardSettings } = useOutsideClick(settingsOverlayRef);
@@ -36,10 +26,10 @@ const Board = ({ gameInfo }: GameObj) => {
             setBoardArr([...boardArr])
         }
     }
-    const addBoard = () => {
-        if (numOfBoards < 3) {
+    const addBoard = async () => {
+        if (numOfBoards < 4) {
             setnumOfBoards(numOfBoards + 1)
-            const newBoard = JSON.parse(JSON.stringify(defaultBoard));
+            const newBoard = await createNewBoard(gameInfo._id);
             setBoardArr([...boardArr, newBoard])
             setBoardInfo(newBoard)
         }
@@ -122,16 +112,23 @@ const Board = ({ gameInfo }: GameObj) => {
     const updateDisplay = () => {
         setDisplayCardSettings(!displayCardSettings)
     }
-
+    const saveBoard = async (e: React.FormEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        gameInfo.title = boardTitle;
+        gameInfo.boards = [...boardArr];
+        console.log(gameInfo)
+        const res = await updateBoardInDB({ gameInfo });
+        console.log(res)
+    }
 
     return (
         <>
             <div className='flex flex-col items-center gap-y-8 mb-8'>
                 <h1 className='text-3xl font-bold'>
-                    <input type="text" defaultValue={gameInfo.title} className='text-center bg-transparent' maxLength={23} />
+                    <input type="text" value={boardTitle} onChange={(e: any) => setBoardTitle(e.currentTarget.value)} className='text-center bg-transparent' maxLength={23} />
                 </h1>
                 <div className='flex gap-8 flex-wrap justify-center'>
-                    <PrimaryButton>Save?</PrimaryButton>
+                    <PrimaryButton onClick={saveBoard}>Save?</PrimaryButton>
                     <div className="inline-flex rounded-md shadow-sm" role="group">
                         <button type="button" className="button-group rounded-s-md" onClick={removeBoard}>
                             <BsDash className='text-lg' />
@@ -144,7 +141,7 @@ const Board = ({ gameInfo }: GameObj) => {
                 </div>
             </div>
             <div className='relative' ref={settingsOverlayRef}>
-                <div className={`absolute text-white p-8 rounded-md z-20 bg-third w-full h-full ${displayCardSettings ? 'scale-100' : 'scale-0'} opacity-95 transition duration-100`}>
+                <div className={`absolute h-full text-white p-8 rounded-md z-20 bg-third w-full ${displayCardSettings ? 'scale-100' : 'scale-0'} opacity-95 transition duration-100`}>
                     <SettingsOverlay boardInfo={boardInfo} cardIdx={cardIdx} updateDisplay={updateDisplay} setBoardInfo={setBoardInfo} />
                 </div>
                 <div className='flex justify-center gap-4'>

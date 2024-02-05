@@ -1,6 +1,10 @@
 import gameData from "@/app/models/GameData";
 import { dbConnect } from "../../../../../db";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
+import board from "@/app/models/Board";
+import { options } from "../../auth/[...nextauth]/options";
 
 export async function GET(req: NextRequest, { params }: any) {
     await dbConnect()
@@ -9,4 +13,41 @@ export async function GET(req: NextRequest, { params }: any) {
         return Response.json({ msg: 'not found' }, { status: 404 })
 
     return Response.json({ board: query })
+}
+
+export async function POST(req: NextRequest, { params }: any) {
+    await dbConnect()
+    const session = await getServerSession(options);
+    const currentGame = await gameData.findById(params.boardID)
+    if (!session || currentGame.author != session?.user?.name) {
+        return new Response("unauthorized", { status: 401 })
+    }
+    const newBoard = new board();
+
+    currentGame.boards.push(newBoard._id)
+    await currentGame.save()
+    await newBoard.save()
+    console.log(currentGame);
+    revalidatePath('/board-hub/create')
+    return Response.json(newBoard, { status: 201 })
+}
+
+export async function PATCH(req: NextRequest, { params }: any) {
+    await dbConnect();
+    const boardId = params.boardID;
+    const body = await req.json();
+    const session = await getServerSession();
+
+    if (!session || session.user?.name !== body.author) {
+        return new Response("Unauthorized", { status: 401 })
+    }
+    body.boards.forEach(async (x: any) => {
+        await board.findByIdAndUpdate(x._id, { ...x });
+    })
+    const res = await gameData.findByIdAndUpdate(boardId, {
+        title: body.title,
+        lastModified: Date.now()
+    });
+    revalidatePath('/board-hub/create')
+    return Response.json(res)
 }

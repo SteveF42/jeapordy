@@ -32,12 +32,12 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo }: pr
     const updateCardEntry = () => {
         const card = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]]
         card.answer = cardAnswer;
-        card.question = card.question
-        card.value = cardValue
+        card.question = cardQuestion;
+        card.value = cardValue;
         
         boardInfo.columns.forEach(x => {
             x.cards[cardIdx[0]].value = cardValue;
-            x.cards.sort((a, b) => a.value - b.value)
+            x.cards.sort((a, b) => a.value - b.value);
         })
 
         setBoardInfo(boardInfo);
