@@ -1,10 +1,10 @@
 import User from "@/app/models/Users";
 import { dbConnect } from "../../../../../db";
 
-export async function POST(res: Response) {
+export async function POST(req: Request) {
     try {
         const db = await dbConnect();
-        const data = await res.json();
+        const data = await req.json();
         const entry = new User({
             username: data.username,
             password: data.password
@@ -23,7 +23,7 @@ export async function POST(res: Response) {
     } catch (e) {
         console.log('[ERROR] route.ts line 26')
         return new Response('error', {
-            status: 418
+            status: 500
         })
     }
 }

@@ -2,9 +2,11 @@ import gameData from "@/app/models/GameData";
 import { dbConnect } from "../../../../db";
 import { getServerSession } from "next-auth";
 import { options } from "../auth/[...nextauth]/options";
+import { revalidatePath } from "next/cache";
+import { NextRequest } from "next/server";
 
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     await dbConnect();
     const session = await getServerSession();
     if (!session) {
@@ -13,13 +15,11 @@ export async function POST(req: Request) {
 
     const gameDetails = await req.json();
     const gameInfo = await new gameData({
-        title: gameDetails?.title,
+        title: gameDetails?.title || "Title",
         author: session.user?.name
     })
     gameInfo.save();
-    // const newBoard = await new board({});
-    // console.log(newBoard)
-    // gameInfo.save()
+    revalidatePath('/api/boardCreate')
     return Response.json(gameInfo, { status: 201 })
 }
 

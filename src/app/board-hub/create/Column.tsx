@@ -7,7 +7,7 @@ import { PrimaryButton } from '@/components/Buttons'
 
 
 type props = {
-    colInfo: BoardObj[0],
+    colInfo: any,
     id: number,
     removeCol: any,
     removeRow: any,
@@ -34,9 +34,9 @@ const Column = ({ colInfo, id, removeCol, removeRow, updateCard, isEndCol, chang
                 </span>
             </div>
             <BoardEntry style={{ height: '100%' }}>
-                <textarea className='bg-transparent h-full w-full resize-none text-center px-1.5 py-2.5 overflow-clip' maxLength={90} onChange={changeTitle(id)} key={id} value={colInfo.topic} onKeyDownCapture={captureKey} title={colInfo.topic}></textarea>
+                <textarea className='bg-transparent h-full w-full resize-none text-center px-1.5 py-2.5 overflow-clip' maxLength={90} onChange={changeTitle(id)} key={id} value={colInfo.colTitle} onKeyDownCapture={captureKey} title={colInfo.colTitle}></textarea>
             </BoardEntry>
-            {colInfo.board.map((val, idx) => {
+            {colInfo.cards.map((val: any, idx: number) => {
                 return (
                     <div className={`relative group/second`} key={idx}>
                         {isEndCol &&
@@ -47,7 +47,7 @@ const Column = ({ colInfo, id, removeCol, removeRow, updateCard, isEndCol, chang
                                 </span>
                             </div>
                         }
-                        <BoardEntry style={{ height: '100%' }} key={idx} cardInfo={val} onClick={updateCard(idx,id)}>{val.value}</BoardEntry>
+                        <BoardEntry style={{ height: '100%' }} key={idx} cardInfo={val} onClick={updateCard(idx, id)}>{val.value}</BoardEntry>
                     </div>
                 )
             })}

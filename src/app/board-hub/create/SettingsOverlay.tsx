@@ -14,7 +14,7 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo }: pr
     const [cardQuestion, setCardQuestion] = useState<string>('');
     const [cardAnswer, setCardAnswer] = useState<string>('');
     useEffect(() => {
-        const cardInfo = boardInfo[cardIdx[1]].board[cardIdx[0]];
+        const cardInfo = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]];
         setCardValue(cardInfo.value);
         setCardQuestion(cardInfo.question);
         setCardAnswer(cardInfo.answer);
@@ -30,14 +30,15 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo }: pr
     }
 
     const updateCardEntry = () => {
-        const card = boardInfo[cardIdx[1]].board[cardIdx[0]]
+        const card = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]]
         card.answer = cardAnswer;
         card.question = card.question
         card.value = cardValue
-        for (let [key, val] of Object.entries(boardInfo)) {
-            val.board[cardIdx[0]].value = cardValue;
-            val.board.sort((a, b) => a.value - b.value)
-        }
+        
+        boardInfo.columns.forEach(x => {
+            x.cards[cardIdx[0]].value = cardValue;
+            x.cards.sort((a, b) => a.value - b.value)
+        })
 
         setBoardInfo(boardInfo);
         updateDisplay();

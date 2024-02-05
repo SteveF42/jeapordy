@@ -4,7 +4,7 @@ import { dbConnect } from "../../../../../db";
 
 export async function POST(req: Request) {
     const con = await dbConnect();
-    
+
     const userInfo = await req.json();
     const userRes = await User.findOne({
         username: userInfo.username,
@@ -17,5 +17,5 @@ export async function POST(req: Request) {
         });
     }
 
-    return null;
+    return new Response('', { status: 404 })
 }
