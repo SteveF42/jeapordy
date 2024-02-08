@@ -18,12 +18,13 @@ export async function POST(req: NextRequest) {
         author: session.user?.name
     })
     gameInfo.save();
-    revalidatePath('/')
+    revalidatePath('/board-hub')
     return Response.json(gameInfo, { status: 201 })
 }
 
 export async function GET(req: Request) {
     const session = await getServerSession(options);
+    console.log(session)
     if (!session)
         return Response.json({ status: "Denied" }, { status: 401 });
 
