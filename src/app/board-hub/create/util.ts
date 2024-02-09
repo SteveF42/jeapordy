@@ -10,7 +10,8 @@ interface BoardObj {
             img: string,
             value: number
         }[]
-    }[]
+    }[],
+    _id: string
 }
 export interface GameObj {
     gameInfo: {
@@ -20,7 +21,7 @@ export interface GameObj {
         title: string,
         boards: BoardObj[],
         _id: string,
-    }
+    },
 }
 
 export const getBoardInfo = async (id: String) => {
@@ -28,7 +29,8 @@ export const getBoardInfo = async (id: String) => {
         method: 'GET',
         credentials: 'include',
     })
-    if (res.status === 404) {
+    console.log(res)
+    if (res.status !== 200) {
         return { board: undefined }
     }
     return await res.json();
@@ -40,6 +42,17 @@ export const updateBoardInDB = async ({ gameInfo }: GameObj) => {
         body: JSON.stringify(gameInfo),
     });
     return await res.json();
+}
+export const deleteBoardInDB = async ({ gameInfo }: GameObj, boardID: string) => {
+    const res = await fetch('/api/board/' + gameInfo._id, {
+        method: "DELETE",
+        credentials: 'include',
+        body: JSON.stringify({
+                author: gameInfo.author,
+                boardID,
+            }
+        )
+    })
 }
 export const createNewBoard = async (id: string): Promise<BoardObj> => {
     // const session = await getServerSession();

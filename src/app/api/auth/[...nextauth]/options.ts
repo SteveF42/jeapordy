@@ -1,7 +1,7 @@
 import DiscordProvider from "next-auth/providers/discord"
 import CredentialsProvider from "next-auth/providers/credentials"
 import User from "@/app/models/Users";
-import { Awaitable } from "next-auth";
+import { dbConnect } from "../../../../../db";
 
 export const options = {
     pages: {
@@ -22,7 +22,7 @@ export const options = {
             },
             async authorize(credentials, req) {
                 try {
-
+                    await dbConnect();
                     const userRes = await User.findOne({
                         username: credentials?.username,
                         password: credentials?.password

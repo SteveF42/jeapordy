@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: Request) {
     const session = await getServerSession(options);
-    console.log(session)
     if (!session)
         return Response.json({ status: "Denied" }, { status: 401 });
 
@@ -32,4 +31,15 @@ export async function GET(req: Request) {
     return Response.json({
         games: userGames
     })
+}
+
+export async function DELETE(req: Request) {
+    const session = await getServerSession();
+    const body = await req.json();
+    if (!session || body?.author !== session.user?.name) {
+        return new Response("Unauthorized", { status: 401 });
+    }
+    const boardRes = await gameData.findByIdAndDelete(body?._id)
+    revalidatePath('/board-hub')
+    return Response.json(boardRes, { status: 200 })
 }

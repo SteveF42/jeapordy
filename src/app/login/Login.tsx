@@ -29,6 +29,7 @@ const LogIn = () => {
         if(res?.ok){
             router.push('/')
         }
+        console.log(res)
     }
 
     return (

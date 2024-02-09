@@ -5,12 +5,16 @@ import { redirect } from 'next/navigation';
 
 const page = async ({ searchParams }: any) => {
     const boardId = searchParams?.id;
-    if(boardId === null){
+    if (boardId === null) {
         redirect('/');
     }
     const gameInfo = await getBoardInfo(boardId);
+    if (!gameInfo.board) {
+        redirect('/board-hub')
+    }
+
     return (
-        <Board gameInfo={gameInfo.board}/>
+        <Board gameInfo={gameInfo.board} />
     )
 }
 

@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
-import { defaultBoard, BoardObj, binarySearch, GameObj, updateBoardInDB, createNewBoard } from './util'
+import { defaultBoard, BoardObj, binarySearch, GameObj, updateBoardInDB, createNewBoard, deleteBoardInDB } from './util'
 import { PrimaryButton } from '@/components/Buttons'
 import './Create.css'
 import { BsDash, BsPlus } from 'react-icons/bs'
@@ -11,7 +11,7 @@ import SettingsOverlay from './SettingsOverlay'
 
 const Board = ({ gameInfo }: GameObj) => {
     const MAXCOL = 9;
-    const [cols, setCols] = useState<number>(5);
+    const [cols, setCols] = useState<number>(gameInfo.boards[0].columns.length);
     const [boardInfo, setBoardInfo] = useState<BoardObj>(gameInfo.boards[0]);
     const [boardArr, setBoardArr] = useState<BoardObj[]>([...gameInfo.boards]);
     const [numOfBoards, setnumOfBoards] = useState<number>(gameInfo.boards.length);
@@ -19,10 +19,11 @@ const Board = ({ gameInfo }: GameObj) => {
     const [cardIdx, setCardIdx] = useState([0, 0]) //[row, col]
     const settingsOverlayRef = useRef(null)
     const { isVisible: displayCardSettings, setIsVisible: setDisplayCardSettings } = useOutsideClick(settingsOverlayRef);
-    const removeBoard = () => {
+    const removeBoard = async () => {
         if (numOfBoards > 1) {
             setnumOfBoards(numOfBoards - 1)
-            boardArr.pop()
+            const board = boardArr.pop()
+            const res = await deleteBoardInDB({ gameInfo }, board?._id as string);
             setBoardArr([...boardArr])
         }
     }

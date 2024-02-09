@@ -34,9 +34,9 @@ const Column = ({ colInfo, id, removeCol, removeRow, updateCard, isEndCol, chang
                 </span>
             </div>
             <BoardEntry style={{ height: '100%' }}>
-                <textarea className='bg-transparent h-full w-full resize-none text-center px-1.5 py-2.5 overflow-clip' maxLength={90} onChange={changeTitle(id)} key={id} value={colInfo.colTitle} onKeyDownCapture={captureKey} title={colInfo.colTitle}></textarea>
+                <textarea className='bg-transparent h-full w-full resize-none text-center px-1.5 py-2.5 overflow-clip' maxLength={90} onChange={changeTitle(id)} key={id} value={colInfo?.colTitle} onKeyDownCapture={captureKey} title={colInfo?.colTitle}></textarea>
             </BoardEntry>
-            {colInfo.cards.map((val: any, idx: number) => {
+            {colInfo?.cards.map((val: any, idx: number) => {
                 return (
                     <div className={`relative group/second`} key={idx}>
                         {isEndCol &&
