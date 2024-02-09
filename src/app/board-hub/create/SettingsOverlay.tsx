@@ -7,9 +7,10 @@ type props = {
     cardIdx: number[],
     updateDisplay: () => void,
     setBoardInfo: any;
+    saveBoard: () => void
 }
 
-const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo }: props) => {
+const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, saveBoard }: props) => {
     const [cardValue, setCardValue] = useState<number>(0);
     const [cardQuestion, setCardQuestion] = useState<string>('');
     const [cardAnswer, setCardAnswer] = useState<string>('');
@@ -34,7 +35,7 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo }: pr
         card.answer = cardAnswer;
         card.question = cardQuestion;
         card.value = cardValue;
-        
+
         boardInfo.columns.forEach(x => {
             x.cards[cardIdx[0]].value = cardValue;
             x.cards.sort((a, b) => a.value - b.value);
@@ -42,6 +43,7 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo }: pr
 
         setBoardInfo(boardInfo);
         updateDisplay();
+        saveBoard();
     }
 
     return (

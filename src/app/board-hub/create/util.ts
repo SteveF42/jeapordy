@@ -29,7 +29,6 @@ export const getBoardInfo = async (id: String) => {
         method: 'GET',
         credentials: 'include',
     })
-    console.log(res)
     if (res.status !== 200) {
         return { board: undefined }
     }

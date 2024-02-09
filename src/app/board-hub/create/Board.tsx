@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import { defaultBoard, BoardObj, binarySearch, GameObj, updateBoardInDB, createNewBoard, deleteBoardInDB } from './util'
-import { PrimaryButton } from '@/components/Buttons'
+import { BoardButton, PrimaryButton } from '@/components/Buttons'
 import './Create.css'
 import { BsDash, BsPlus } from 'react-icons/bs'
 import Column from './Column'
@@ -9,6 +9,7 @@ import { InputSecondary } from '@/components/Inputs'
 import useOutsideClick from '@/hooks/useOutsideClick'
 import SettingsOverlay from './SettingsOverlay'
 
+var timeoutID: NodeJS.Timeout;
 const Board = ({ gameInfo }: GameObj) => {
     const MAXCOL = 9;
     const [cols, setCols] = useState<number>(gameInfo.boards[0].columns.length);
@@ -19,6 +20,11 @@ const Board = ({ gameInfo }: GameObj) => {
     const [cardIdx, setCardIdx] = useState([0, 0]) //[row, col]
     const settingsOverlayRef = useRef(null)
     const { isVisible: displayCardSettings, setIsVisible: setDisplayCardSettings } = useOutsideClick(settingsOverlayRef);
+    const saveTimer = () => {
+        clearTimeout(timeoutID);
+        timeoutID = setTimeout(() => saveBoard(), 1000);
+    }
+
     const removeBoard = async () => {
         if (numOfBoards > 1) {
             setnumOfBoards(numOfBoards - 1)
@@ -62,6 +68,7 @@ const Board = ({ gameInfo }: GameObj) => {
             newBoard.columns = boardInfo.columns.filter((_, i) => i != idx);
             setBoardInfo(newBoard);
             setCols(cols - 1);
+            saveTimer()
         }
     }
     const removeRow = (idx: number) => {
@@ -69,9 +76,11 @@ const Board = ({ gameInfo }: GameObj) => {
             const newBoard: BoardObj = { ...boardInfo };
             newBoard.columns.forEach(x => x.cards.splice(idx, 1))
             setBoardInfo(newBoard);
+            saveTimer()
         }
     }
     const addCol = () => {
+
         return (e: React.MouseEvent) => {
             if (cols >= MAXCOL) return;
             const newBoard: BoardObj = boardInfo
@@ -83,6 +92,7 @@ const Board = ({ gameInfo }: GameObj) => {
             newBoard.columns[cols].colTitle = "New Topic"
             setBoardInfo(newBoard);
             setCols(cols + 1)
+            saveTimer();
         }
     }
     const addRow = () => {
@@ -95,6 +105,7 @@ const Board = ({ gameInfo }: GameObj) => {
                 x.cards.splice(idxToInsert, 0, newEntry);
             })
             setBoardInfo(newBoard);
+            saveTimer()
         }
     }
     const changeTitle = (colIdx: number) => {
@@ -102,7 +113,12 @@ const Board = ({ gameInfo }: GameObj) => {
             const text = e.currentTarget.value;
             boardInfo.columns[colIdx].colTitle = text;
             setBoardInfo({ ...boardInfo });
+            saveTimer()
         }
+    }
+    const changeBoardTitle = (e: React.FormEvent<HTMLInputElement>) => {
+        setBoardTitle(e.currentTarget.value)
+        saveTimer();
     }
     const displayCard = (col: number, row: number) => {
         return (e: React.MouseEvent) => {
@@ -113,8 +129,7 @@ const Board = ({ gameInfo }: GameObj) => {
     const updateDisplay = () => {
         setDisplayCardSettings(!displayCardSettings)
     }
-    const saveBoard = async (e: React.FormEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    const saveBoard = async () => {
         gameInfo.title = boardTitle;
         gameInfo.boards = [...boardArr];
         console.log(gameInfo)
@@ -124,16 +139,15 @@ const Board = ({ gameInfo }: GameObj) => {
 
     return (
         <>
-            <div className='flex flex-col items-center gap-y-8 mb-8'>
+            <div className='flex flex-col items-center gap-y-8 mb-8 pt-8'>
                 <h1 className='text-3xl font-bold'>
-                    <input type="text" value={boardTitle} onChange={(e: any) => setBoardTitle(e.currentTarget.value)} className='text-center bg-transparent' maxLength={23} />
+                    <input type="text" value={boardTitle} onChange={changeBoardTitle} className='text-center autosave bg-transparent' maxLength={23} />
                 </h1>
                 <div className='flex gap-8 flex-wrap justify-center'>
-                    <PrimaryButton onClick={saveBoard}>Save?</PrimaryButton>
                     <div className="inline-flex rounded-md shadow-sm" role="group">
-                        <button type="button" className="button-group rounded-s-md" onClick={removeBoard}>
+                        <BoardButton type="button" className="button-group rounded-s-md" onClick={removeBoard}>
                             <BsDash className='text-lg' />
-                        </button>
+                        </BoardButton>
                         {displayBoards()}
                         <button type="button" className="button-group rounded-e-md" onClick={addBoard}>
                             <BsPlus className='text-lg' />
@@ -143,7 +157,7 @@ const Board = ({ gameInfo }: GameObj) => {
             </div>
             <div className='relative' ref={settingsOverlayRef}>
                 <div className={`absolute h-full text-white p-8 rounded-md z-20 bg-third w-full ${displayCardSettings ? 'scale-100' : 'scale-0'} opacity-95 transition duration-100`}>
-                    <SettingsOverlay boardInfo={boardInfo} cardIdx={cardIdx} updateDisplay={updateDisplay} setBoardInfo={setBoardInfo} />
+                    <SettingsOverlay boardInfo={boardInfo} cardIdx={cardIdx} updateDisplay={updateDisplay} setBoardInfo={setBoardInfo} saveBoard={saveBoard}/>
                 </div>
                 <div className='flex justify-center gap-4'>
                     <button className='button-group rounded-md' onClick={addCol()}>Add Col +</button>

@@ -1,7 +1,15 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 import board from "./Board";
 
-const gameDataSchema = new Schema({
+export interface IGameData {
+    title: string,
+    lastModified: Date,
+    author: string,
+    boards: Types.UUID[]
+}
+
+
+const gameDataSchema = new Schema<IGameData>({
     title: {
         type: String,
         required: true,

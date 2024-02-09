@@ -7,6 +7,7 @@ import { NextRequest } from "next/server";
 
 
 export async function POST(req: NextRequest) {
+    await dbConnect();
     const session = await getServerSession();
     if (!session) {
         return new Response("Denied", { status: 401 })
@@ -23,6 +24,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: Request) {
+    await dbConnect();
     const session = await getServerSession(options);
     if (!session)
         return Response.json({ status: "Denied" }, { status: 401 });
@@ -34,6 +36,7 @@ export async function GET(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+    await dbConnect();
     const session = await getServerSession();
     const body = await req.json();
     if (!session || body?.author !== session.user?.name) {
