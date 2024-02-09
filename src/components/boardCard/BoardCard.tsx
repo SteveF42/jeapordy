@@ -11,19 +11,19 @@ const BoardCard = ({ board }: props) => {
 
     const formatDate = (input: string) => {
         const date = new Date(input);
-        const s = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`
+        const s = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
         return s
     }
     const editBoard = () => {
         router.push(`/board-hub/create?id=${board?._id}`)
     }
     const deleteBoard = async () => {
-        const res = await fetch('/api/boardCreate',{
-            method:'DELETE',
-            credentials:'include',
-            body:JSON.stringify(board)
+        const res = await fetch('/api/boardCreate', {
+            method: 'DELETE',
+            credentials: 'include',
+            body: JSON.stringify(board)
         })
-        if(res.ok){
+        if (res.ok) {
             setInvisible(true)
         }
     }
@@ -34,7 +34,7 @@ const BoardCard = ({ board }: props) => {
                 <h2 className='text-base'>last edited: {formatDate(board?.lastModified)}</h2>
             </div>
             <div className='options flex items-center flex-col justify-between'>
-                <BsFillTrash3Fill className='hover:cursor-pointer hover:scale-125' onClick={deleteBoard}/>
+                <BsFillTrash3Fill className='hover:cursor-pointer hover:scale-125' onClick={deleteBoard} />
                 <BsPencilSquare className='hover:cursor-pointer hover:scale-125' onClick={editBoard} />
             </div>
         </div>

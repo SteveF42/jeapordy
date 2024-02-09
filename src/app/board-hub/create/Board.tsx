@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { defaultBoard, BoardObj, binarySearch, GameObj, updateBoardInDB, createNewBoard, deleteBoardInDB } from './util'
 import { BoardButton, PrimaryButton } from '@/components/Buttons'
 import './Create.css'
-import { BsDash, BsPlus } from 'react-icons/bs'
+import { BsCheck, BsDash, BsPlus } from 'react-icons/bs'
 import Column from './Column'
 import { InputSecondary } from '@/components/Inputs'
 import useOutsideClick from '@/hooks/useOutsideClick'
@@ -17,12 +17,19 @@ const Board = ({ gameInfo }: GameObj) => {
     const [boardArr, setBoardArr] = useState<BoardObj[]>([...gameInfo.boards]);
     const [numOfBoards, setnumOfBoards] = useState<number>(gameInfo.boards.length);
     const [boardTitle, setBoardTitle] = useState(gameInfo.title)
+    const [isSaving, setIsSaving] = useState(false)
+    const [saved, setSaved] = useState(false);
     const [cardIdx, setCardIdx] = useState([0, 0]) //[row, col]
     const settingsOverlayRef = useRef(null)
     const { isVisible: displayCardSettings, setIsVisible: setDisplayCardSettings } = useOutsideClick(settingsOverlayRef);
+
     const saveTimer = () => {
         clearTimeout(timeoutID);
-        timeoutID = setTimeout(() => saveBoard(), 1000);
+        setIsSaving(true);
+        setSaved(false);
+        timeoutID = setTimeout(() => {
+            saveBoard()
+        }, 1000);
     }
 
     const removeBoard = async () => {
@@ -135,10 +142,21 @@ const Board = ({ gameInfo }: GameObj) => {
         console.log(gameInfo)
         const res = await updateBoardInDB({ gameInfo });
         console.log(res)
+        setSaved(true);
+        setIsSaving(true);
+        setTimeout(() => {
+            setIsSaving(false)
+        }, 1000)
     }
 
     return (
         <>
+            <div className={`justify-between flex position absolute left-16 p-3 bg-green-400 rounded-md outline outline-2 outline-green-600 translate-y-[2rem] transition duration-150 ${isSaving ? 'scale-100' : 'scale-0'}`}>
+                <span className='text-center'>{!saved ? 'saving...' : 'saved!'}</span>
+                {saved &&
+                    <BsCheck className='self-center'></BsCheck>
+                }
+            </div>
             <div className='flex flex-col items-center gap-y-8 mb-8 pt-8'>
                 <h1 className='text-3xl font-bold'>
                     <input type="text" value={boardTitle} onChange={changeBoardTitle} className='text-center autosave bg-transparent' maxLength={23} />
@@ -157,7 +175,7 @@ const Board = ({ gameInfo }: GameObj) => {
             </div>
             <div className='relative' ref={settingsOverlayRef}>
                 <div className={`absolute h-full text-white p-8 rounded-md z-20 bg-third w-full ${displayCardSettings ? 'scale-100' : 'scale-0'} opacity-95 transition duration-100`}>
-                    <SettingsOverlay boardInfo={boardInfo} cardIdx={cardIdx} updateDisplay={updateDisplay} setBoardInfo={setBoardInfo} saveBoard={saveBoard}/>
+                    <SettingsOverlay boardInfo={boardInfo} cardIdx={cardIdx} updateDisplay={updateDisplay} setBoardInfo={setBoardInfo} saveBoard={saveBoard} />
                 </div>
                 <div className='flex justify-center gap-4'>
                     <button className='button-group rounded-md' onClick={addCol()}>Add Col +</button>
