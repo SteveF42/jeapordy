@@ -40,7 +40,7 @@ export const updateBoardInDB = async ({ gameInfo }: GameObj) => {
         credentials: "include",
         body: JSON.stringify(gameInfo),
     });
-    return await res.json();
+    return res;
 }
 export const deleteBoardInDB = async ({ gameInfo }: GameObj, boardID: string) => {
     const res = await fetch('/api/board/' + gameInfo._id, {

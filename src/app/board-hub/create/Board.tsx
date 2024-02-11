@@ -38,6 +38,12 @@ const Board = ({ gameInfo }: GameObj) => {
             const board = boardArr.pop()
             const res = await deleteBoardInDB({ gameInfo }, board?._id as string);
             setBoardArr([...boardArr])
+            setIsSaving(true);
+            setSaved(true);
+            setTimeout(() => {
+                setIsSaving(false);
+            }, 1000);
+            
         }
     }
     const addBoard = async () => {
@@ -46,6 +52,12 @@ const Board = ({ gameInfo }: GameObj) => {
             const newBoard = await createNewBoard(gameInfo._id);
             setBoardArr([...boardArr, newBoard])
             setBoardInfo(newBoard)
+            setIsSaving(true);
+            setSaved(true);
+            setTimeout(() => {
+                setIsSaving(false)
+
+            }, 1000);
         }
     }
     const changeBoard = (idx: number) => {
@@ -141,12 +153,14 @@ const Board = ({ gameInfo }: GameObj) => {
         gameInfo.boards = [...boardArr];
         console.log(gameInfo)
         const res = await updateBoardInDB({ gameInfo });
-        console.log(res)
-        setSaved(true);
-        setIsSaving(true);
-        setTimeout(() => {
-            setIsSaving(false)
-        }, 1000)
+        if (res.ok) {
+            console.log(res)
+            setSaved(true);
+            setIsSaving(true);
+            setTimeout(() => {
+                setIsSaving(false)
+            }, 1000)
+        }
     }
 
     return (
