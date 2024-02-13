@@ -47,9 +47,9 @@ export const deleteBoardInDB = async ({ gameInfo }: GameObj, boardID: string) =>
         method: "DELETE",
         credentials: 'include',
         body: JSON.stringify({
-                author: gameInfo.author,
-                boardID,
-            }
+            author: gameInfo.author,
+            boardID,
+        }
         )
     })
 }

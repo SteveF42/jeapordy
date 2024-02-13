@@ -22,6 +22,9 @@ const columnSchema = new Schema({
                 type: Number,
                 default: () => 100
             },
+            image: {
+                type: String
+            }
         }],
         required: true,
         default: () => {
