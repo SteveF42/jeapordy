@@ -137,6 +137,7 @@ const Board = ({ gameInfo }: GameObj) => {
     }
     const changeBoardTitle = (e: React.FormEvent<HTMLInputElement>) => {
         setBoardTitle(e.currentTarget.value)
+        gameInfo.title = e.currentTarget.value;
         saveTimer();
     }
     const displayCard = (col: number, row: number) => {
@@ -149,7 +150,6 @@ const Board = ({ gameInfo }: GameObj) => {
         setDisplayCardSettings(!displayCardSettings)
     }
     const saveBoard = async () => {
-        gameInfo.title = boardTitle;
         gameInfo.boards = [...boardArr];
         console.log(gameInfo)
         const res = await updateBoardInDB({ gameInfo });
