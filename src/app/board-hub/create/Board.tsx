@@ -8,6 +8,7 @@ import Column from './Column'
 import { InputSecondary } from '@/components/Inputs'
 import useOutsideClick from '@/hooks/useOutsideClick'
 import SettingsOverlay from './SettingsOverlay'
+import { useRouter } from 'next/navigation'
 
 var timeoutID: NodeJS.Timeout;
 const Board = ({ gameInfo }: GameObj) => {
@@ -21,6 +22,7 @@ const Board = ({ gameInfo }: GameObj) => {
     const [saved, setSaved] = useState(false);
     const [cardIdx, setCardIdx] = useState([0, 0]) //[row, col]
     const settingsOverlayRef = useRef(null)
+    const router = useRouter()
     const { isVisible: displayCardSettings, setIsVisible: setDisplayCardSettings } = useOutsideClick(settingsOverlayRef);
 
     const saveTimer = () => {
@@ -43,7 +45,7 @@ const Board = ({ gameInfo }: GameObj) => {
             setTimeout(() => {
                 setIsSaving(false);
             }, 1000);
-            
+
         }
     }
     const addBoard = async () => {
@@ -151,8 +153,8 @@ const Board = ({ gameInfo }: GameObj) => {
     }
     const saveBoard = async () => {
         gameInfo.boards = [...boardArr];
-        console.log(gameInfo)
         const res = await updateBoardInDB({ gameInfo });
+        router.refresh()
         if (res.ok) {
             console.log(res)
             setSaved(true);

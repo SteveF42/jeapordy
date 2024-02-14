@@ -2,7 +2,7 @@
 
 import BoardCard from '@/components/boardCard/BoardCard';
 import { InputSecondary } from '@/components/Inputs';
-import { FormEvent, MutableRefObject, useRef, useState } from 'react'
+import { FormEvent, MutableRefObject, useEffect, useRef, useState } from 'react'
 import { BsPlus, BsX } from 'react-icons/bs';
 import useOutSideClick from '@/hooks/useOutsideClick'
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,12 @@ const BoardHub = ({ userGames }: { userGames: any }) => {
     const [myBoards, setMyBoards] = useState([]);
     const [newBoardTitle, setNewBoardTitle] = useState('')
     const router = useRouter();
+
+    //idk if this is good but its legit the only thing that actually made this shit work
+    // useEffect(() => {
+    //   router.refresh()
+    // }, [])
+    
 
     const overlayRef = useRef<HTMLDivElement>(null)
     const { isVisible: showOverlay, setIsVisible: setShowOverlay } = useOutSideClick(overlayRef);
@@ -38,6 +44,7 @@ const BoardHub = ({ userGames }: { userGames: any }) => {
         })
         const gameData = await res.json();
         if (res.status === 201 && res.ok) {
+            router.refresh()
             router.push(`/board-hub/create?id=${gameData?._id}`);
         }
     }

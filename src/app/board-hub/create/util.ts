@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth"
+import { revalidatePath } from "next/cache"
 
 interface BoardObj {
     columns: {

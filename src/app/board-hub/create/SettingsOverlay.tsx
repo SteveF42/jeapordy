@@ -16,9 +16,9 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
     const [cardAnswer, setCardAnswer] = useState<string>('');
     useEffect(() => {
         const cardInfo = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]];
-        setCardValue(cardInfo.value);
-        setCardQuestion(cardInfo.question);
-        setCardAnswer(cardInfo.answer);
+        setCardValue(cardInfo?.value);
+        setCardQuestion(cardInfo?.question);
+        setCardAnswer(cardInfo?.answer);
         console.log(cardIdx);
     }, [cardIdx])
 

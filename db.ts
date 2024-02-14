@@ -14,7 +14,7 @@ const options = {
 
 export async function dbConnect() {
     if (db && db.conn) {
-        console.log('returning previous db');
+        // console.log('returning previous db');
         return db.conn;
     }
     const conString = process.env.MONGO_URL;

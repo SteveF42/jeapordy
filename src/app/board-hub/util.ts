@@ -6,7 +6,9 @@ export const getUserCreatedBoards = async () => {
         method: "GET",
         headers: headers(),
         credentials: 'include',
-        cache:'no-store'
+        next:{
+            revalidate:0
+        }
     })
     if(res.status === 500){
         redirect('/')
