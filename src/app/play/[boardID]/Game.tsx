@@ -2,39 +2,90 @@
 import { GameObj } from '@/app/board-hub/create/util'
 import PlayerCard from '@/components/PlayerCard'
 import BoardEntry from '@/components/boardEntry/BoardEntry'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Board from './Board'
+import useOutsideClick from '@/hooks/useOutsideClick'
+import { BsGearFill, BsX } from 'react-icons/bs'
 
-export const dynamic = 'force-dynamic'
 
 const Game = ({ gameInfo }: GameObj) => {
     const [currentBoard, setCurrentBoard] = useState(0);
     const [currentSquare, setCurrentSquare] = useState([0, 0]) //row, col
-
+    const [numberOfPlayers, setNumberOfPlayers] = useState(1);
+    const settingsRef = useRef(null)
+    const questionRef = useRef(null)
+    const { isVisible: questionVisible, setIsVisible: setQuestionVisible } = useOutsideClick(questionRef)
+    const { isVisible, setIsVisible } = useOutsideClick(settingsRef);
 
     const onCardClick = (row: number, col: number) => {
         return (e: React.MouseEvent) => {
-            console.log(row,col)
+            console.log(row, col)
+            setQuestionVisible(true);
+            setCurrentSquare([row, col])
         }
     }
 
-    return (
-        <div className='relative'>
-            <div className='min-h-[500px] absolute'> hkljsfdajhksdfajhkasfdhjlk</div>
-            <h1 className='text-center text-2xl font-bold mb-4'>{gameInfo.title}</h1>
-            <div className='board grid p-4 mx-auto min-w-[900px] scale-75 sm:mx-auto sm:scale-100 transition' style={{ gridTemplateColumns: `repeat(${gameInfo.boards[currentBoard].columns.length}, minmax(0, 1fr))` }}>
-                <Board currentBoard={gameInfo.boards[currentBoard]} onCardClick={onCardClick}/>
-            </div>
-            <div className='flex justify-evenly flex-wrap gap-y-2'>
-                <PlayerCard></PlayerCard>
-                <PlayerCard></PlayerCard>
-                <PlayerCard></PlayerCard>
-                <PlayerCard></PlayerCard>
-                <PlayerCard></PlayerCard>
-                <PlayerCard></PlayerCard>
-            </div>
+    const displayNumOfPlayers = () => {
+        const elems = []
+        for (let i = 0; i < numberOfPlayers; i++) {
+            elems.push(
+                <PlayerCard key={i}></PlayerCard>
+            )
+        }
+        return elems
+    }
+    const addPlayer = () => {
+        if (numberOfPlayers < 6)
+            setNumberOfPlayers(numberOfPlayers + 1)
+    }
+    const removePlayer = () => {
+        if (numberOfPlayers > 0)
+            setNumberOfPlayers(numberOfPlayers - 1)
+    }
+    const getCurrentSquare = () => {
+        return gameInfo.boards[currentBoard].columns[currentSquare[0]].cards[currentSquare[1]]
+    }
 
-        </div>
+    return (
+        <>
+            <div className={`absolute w-full h-[90%] p-6 text-white z-20 ${questionVisible ? 'scale-100' : 'scale-0'} transition duration-100`}>
+                <div className='bg-third w-full h-full rounded-md transition' ref={questionRef}>
+                    <h1>{getCurrentSquare().question}</h1>
+                    
+                </div>
+            </div>
+            <div className={`relative p-6 ${questionVisible && 'hidden'} transition`}>
+                <div className={`w-full absolute scale-0 ${isVisible && 'scale-100'} z-20 transition`}>
+                    <div className='text-white text-center p-4 bg-slate-600 opacity-95 transition rounded-md w-1/2 max-w-screen-md mx-auto' ref={settingsRef}>
+                        {/* <span className='absolute right-0 m-1 bg-slate-500 opacity-45'><BsX/></span> */}
+                        <h1 className='text-2xl font-bold'>settings</h1>
+                        <span>Invite Code: coming soon...</span>
+                        <div>
+                            <h2 className='text-lg font-medium'>Number of players</h2>
+                            <span className='text-2xl font-bold'>{numberOfPlayers}</span>
+                            <div className='flex justify-center gap-6 text-white font-medium text-lg'>
+                                <button className='bg-primary rounded-md min-w-8' onClick={removePlayer}>-</button>
+                                <button className='bg-secondary rounded-md min-w-8' onClick={addPlayer}>+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className='absolute min-[410px] text-center p-4 text-white h-full w-full z-20 bg-slate-600 rounded-md scale-0 '>
+                    <h1 className='text-2xl font-medium'>dsadsa</h1>
+                </div>
+
+                <span className='text-lg'>
+                    <BsGearFill className='hover:scale-125 hover:rotate-45 transition hover:cursor-pointer' onClick={() => setIsVisible(true)} />
+                </span>
+                <h1 className='text-center text-2xl font-bold mb-4'>{gameInfo.title}</h1>
+                <div className='board grid p-4 mx-auto min-w-[900px] scale-75 sm:mx-auto sm:scale-100 transition' style={{ gridTemplateColumns: `repeat(${gameInfo.boards[currentBoard].columns.length}, minmax(0, 1fr))` }}>
+                    <Board currentBoard={gameInfo.boards[currentBoard]} onCardClick={onCardClick} />
+                </div>
+                <div className='flex justify-evenly flex-wrap gap-y-2'>
+                    {displayNumOfPlayers()}
+                </div>
+            </div>
+        </>
     )
 }
 

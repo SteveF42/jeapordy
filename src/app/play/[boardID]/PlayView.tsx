@@ -9,7 +9,7 @@ const PlayView = async ({ params }: { params: { boardID: string } }) => {
     const boardData = await getBoardInfo(params.boardID)
 
     return (
-        <div className='p-6'>
+        <div className=''>
             <Game gameInfo={boardData.board}></Game>
         </div>
     )
