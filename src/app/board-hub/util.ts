@@ -5,11 +5,9 @@ export const getUserCreatedBoards = async () => {
     const res = await fetch(process.env.NEXTAUTH_URL + '/api/boardCreate', {
         method: "GET",
         headers: headers(),
-        next:{
-            revalidate:0
-        }
+        cache: "no-store"
     })
-    if(res.status === 500){
+    if(res.status === 500 || res.status === 401){
         redirect('/')
     }
     return await res.json();

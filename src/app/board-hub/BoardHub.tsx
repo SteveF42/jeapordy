@@ -62,7 +62,7 @@ const BoardHub = ({ userGames }: { userGames: any }) => {
                 <button className='bg-secondary p-2 flex flex-row items-center gap-1 rounded-md hover:bg-third text-white font-semibold mb-2' onClick={() => setShowOverlay(!showOverlay)}>New Board <BsPlus /></button>
                 <div className='flex gap-2 flex-wrap justify-evenly'>
                     {/* temporary stuff that'll be populated later */}
-                    {userGames.map((game: any, idx: number) => <BoardCard board={game} key={idx} />)}
+                    {userGames?.map((game: any, idx: number) => <BoardCard board={game} key={idx} />)}
 
                 </div>
             </div>

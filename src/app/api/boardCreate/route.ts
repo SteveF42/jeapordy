@@ -8,7 +8,7 @@ import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
     await dbConnect();
-    const session = await getServerSession();
+    const session = await getServerSession(options);
     if (!session) {
         return new Response("Denied", { status: 401 })
     }
@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     await dbConnect();
     const session = await getServerSession(options);
     if (!session)
-        return Response.json({ status: "Denied" }, { status: 401 });
+        return Response.json({ games: [] }, { status: 401 });
 
     const userGames = await gameData.find({ author: session?.user?.name }).limit(20);
     return Response.json({
