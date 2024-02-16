@@ -25,16 +25,6 @@ export interface GameObj {
     },
 }
 
-export const getBoardInfo = async (id: String) => {
-    const res = await fetch(process.env.NEXTAUTH_URL + '/api/board/' + id, {
-        method: 'GET',
-        credentials: 'include',
-    })
-    if (res.status !== 200) {
-        return { board: undefined }
-    }
-    return await res.json();
-}
 export const updateBoardInDB = async ({ gameInfo }: GameObj) => {
     const res = await fetch('/api/board/' + gameInfo._id, {
         method: "PATCH",

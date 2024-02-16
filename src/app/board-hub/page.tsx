@@ -5,10 +5,10 @@ import { getServerSession } from 'next-auth';
 
 export const dynamic = "force-dynamic"
 const page = async () => {
-  // const userData = await getUserCreatedBoards();
+  const userGames = await getUserCreatedBoards();
 
   return (
-    <BoardHub userGames={[]}></BoardHub>
+    <BoardHub userGames={userGames}></BoardHub>
   )
 }
 

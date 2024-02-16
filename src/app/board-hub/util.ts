@@ -1,16 +1,18 @@
+import { getServerSession } from "next-auth";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { options } from "../api/auth/[...nextauth]/options";
+import gameData from "../models/GameData";
+import { dbConnect } from "../../../db";
 
 export const getUserCreatedBoards = async () => {
-    const res = await fetch(process.env.NEXTAUTH_URL + '/api/boardCreate', {
-        method: "GET",
-        headers: headers(),
-        cache: "no-store"
-    })
-    if(res.status === 500 || res.status === 401){
-        redirect('/')
-    }
-    return await res.json();
+    await dbConnect();
+    const session = await getServerSession(options);
+    console.log(session)
+    if (!session)
+        return []
+    const userGames = await gameData.find({ author: session?.user?.name }).limit(20);
+
+    return JSON.parse(JSON.stringify(userGames));
 }
 
 export const createNewBoard = async () => {
