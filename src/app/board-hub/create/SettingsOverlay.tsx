@@ -1,6 +1,6 @@
 import { PrimaryButton } from "@/components/Buttons"
 import { BoardObj } from "./util"
-import { SetStateAction, TextareaHTMLAttributes, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 
 type props = {
     boardInfo: BoardObj,

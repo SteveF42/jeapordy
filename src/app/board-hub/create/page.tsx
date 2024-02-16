@@ -1,7 +1,7 @@
 import React from 'react'
 import Board from './Board'
-import { getBoardInfo } from './util'
 import { redirect } from 'next/navigation';
+import { getBoardInfo } from '@/app/play/[boardID]/util';
 
 const page = async ({ searchParams }: any) => {
     const boardId = searchParams?.id;
