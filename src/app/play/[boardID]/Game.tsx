@@ -16,20 +16,20 @@ const Game = ({ gameInfo }: GameObj) => {
     const questionRef = useRef(null)
     const { isVisible: questionVisible, setIsVisible: setQuestionVisible } = useOutsideClick(questionRef)
     const { isVisible, setIsVisible } = useOutsideClick(settingsRef);
+    const [showAnswer, setShowAnswer] = useState(false);
+    const [pointsAwarded, setPointsAwarded] = useState(0);
 
     const onCardClick = (row: number, col: number) => {
-        return (e: React.MouseEvent) => {
-            console.log(row, col)
-            setQuestionVisible(true);
-            setCurrentSquare([row, col])
-        }
+        setQuestionVisible(true);
+        setShowAnswer(false);
+        setCurrentSquare([row, col])
     }
 
     const displayNumOfPlayers = () => {
         const elems = []
         for (let i = 0; i < numberOfPlayers; i++) {
             elems.push(
-                <PlayerCard key={i}></PlayerCard>
+                <PlayerCard key={i} awardedPoints={pointsAwarded}></PlayerCard>
             )
         }
         return elems
@@ -43,15 +43,22 @@ const Game = ({ gameInfo }: GameObj) => {
             setNumberOfPlayers(numberOfPlayers - 1)
     }
     const getCurrentSquare = () => {
-        return gameInfo.boards[currentBoard].columns[currentSquare[0]].cards[currentSquare[1]]
+        return gameInfo.boards[currentBoard].columns[currentSquare[1]].cards[currentSquare[0]]
     }
 
+    const revealAnswer = () => {
+        if (!showAnswer) {
+            setShowAnswer(true);
+        } else {
+            setQuestionVisible(false);
+            setPointsAwarded(getCurrentSquare()?.value);
+        }
+    }
     return (
         <>
             <div className={`absolute w-full h-[90%] p-6 text-white z-20 ${questionVisible ? 'scale-100' : 'scale-0'} transition duration-100`}>
-                <div className='bg-third w-full h-full rounded-md transition' ref={questionRef}>
-                    <h1>{getCurrentSquare().question}</h1>
-                    
+                <div className='bg-third w-full h-full rounded-md transition p-8 flex hover:cursor-pointer' ref={questionRef} onClick={revealAnswer}>
+                    <h1 className='text-center text-6xl text-wrap w-[25ch] m-auto'>{!showAnswer ? getCurrentSquare()?.question : getCurrentSquare()?.answer}</h1>
                 </div>
             </div>
             <div className={`relative p-6 ${questionVisible && 'hidden'} transition`}>

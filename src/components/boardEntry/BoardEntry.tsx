@@ -13,7 +13,7 @@ type props = {
 
 const BoardEntry = ({ children, cardInfo, ...rest }: props) => {
     return (
-        <div className='flex items-center justify-center min-h-24 bg-third text-white text-lg border-2 border-background min-w-min font-bold hover:translate-y-1 hover:bg-opacity-95 hover:cursor-pointer' {...rest}>
+        <div className='flex items-center justify-center min-h-[6.5rem] bg-third text-white text-xl border-2 border-background min-w-min font-bold hover:translate-y-1 hover:bg-opacity-95 hover:cursor-pointer' {...rest}>
             {children}
         </div>
     )
