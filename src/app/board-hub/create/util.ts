@@ -26,7 +26,7 @@ export interface GameObj {
 }
 
 export const getBoardInfo = async (id: String) => {
-    const res = await fetch('http://localhost:3000/api/board/' + id, {
+    const res = await fetch(process.env.NEXTAUTH_URL + '/api/board/' + id, {
         method: 'GET',
         credentials: 'include',
     })

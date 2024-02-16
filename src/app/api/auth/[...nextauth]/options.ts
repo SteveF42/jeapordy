@@ -2,6 +2,7 @@ import DiscordProvider from "next-auth/providers/discord"
 import CredentialsProvider from "next-auth/providers/credentials"
 import User from "@/app/models/Users";
 import { dbConnect } from "../../../../../db";
+import { randomBytes, randomUUID } from "crypto";
 
 export const options = {
     pages: {
@@ -53,5 +54,13 @@ export const options = {
                 }
             }
         })
-    ]
+    ],
+    session: {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        updateAge: 24 * 60 * 60, // 24 hours
+        generateSessionToken: () => {
+            // Return a random token
+            return randomUUID?.() ?? randomBytes(32).toString('hex')
+        }
+    }
 }

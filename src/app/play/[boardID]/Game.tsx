@@ -67,6 +67,8 @@ const Game = ({ gameInfo }: GameObj) => {
                         {/* <span className='absolute right-0 m-1 bg-slate-500 opacity-45'><BsX/></span> */}
                         <h1 className='text-2xl font-bold'>settings</h1>
                         <span>Invite Code: coming soon...</span>
+                        <h1 className='text-lg font-bold'>custom score</h1>
+                        <input className='text-black text-center rounded-md' type="number" value={pointsAwarded} onChange={(e: React.FormEvent<HTMLInputElement>) => setPointsAwarded(Number.parseInt(e.currentTarget.value))} />
                         <div>
                             <h2 className='text-lg font-medium'>Number of players</h2>
                             <span className='text-2xl font-bold'>{numberOfPlayers}</span>
@@ -77,14 +79,11 @@ const Game = ({ gameInfo }: GameObj) => {
                         </div>
                     </div>
                 </div>
-                <div className='absolute min-[410px] text-center p-4 text-white h-full w-full z-20 bg-slate-600 rounded-md scale-0 '>
-                    <h1 className='text-2xl font-medium'>dsadsa</h1>
-                </div>
 
                 <span className='text-lg'>
                     <BsGearFill className='hover:scale-125 hover:rotate-45 transition hover:cursor-pointer' onClick={() => setIsVisible(true)} />
                 </span>
-                <h1 className='text-center text-2xl font-bold mb-4'>{gameInfo.title}</h1>
+                <h1 className='text-center text-4xl font-bold mb-4'>{gameInfo.title}</h1>
                 <div className='board grid p-4 mx-auto min-w-[900px] scale-75 sm:mx-auto sm:scale-100 transition' style={{ gridTemplateColumns: `repeat(${gameInfo.boards[currentBoard].columns.length}, minmax(0, 1fr))` }}>
                     <Board currentBoard={gameInfo.boards[currentBoard]} onCardClick={onCardClick} />
                 </div>

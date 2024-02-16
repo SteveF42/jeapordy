@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const getUserCreatedBoards = async () => {
-    const res = await fetch('http://localhost:3000/api/boardCreate', {
+    const res = await fetch(process.env.NEXTAUTH_URL + '/api/boardCreate', {
         method: "GET",
         headers: headers(),
         credentials: 'include',
