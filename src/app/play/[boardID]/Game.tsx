@@ -1,7 +1,6 @@
 "use client"
 import { GameObj } from '@/app/board-hub/create/util'
 import PlayerCard from '@/components/PlayerCard'
-import BoardEntry from '@/components/boardEntry/BoardEntry'
 import React, { useRef, useState } from 'react'
 import Board from './Board'
 import useOutsideClick from '@/hooks/useOutsideClick'
@@ -54,6 +53,16 @@ const Game = ({ gameInfo }: GameObj) => {
             setPointsAwarded(getCurrentSquare()?.value);
         }
     }
+    const nextBoard = () => {
+        if (currentBoard < gameInfo.boards.length - 1) {
+            setCurrentBoard(currentBoard + 1)
+        }
+    }
+    const previosBoard = () => {
+        if (currentBoard > 0) {
+            setCurrentBoard(currentBoard - 1)
+        }
+    }
     return (
         <>
             <div className={`absolute w-full h-[90%] p-6 text-white z-20 ${questionVisible ? 'scale-100' : 'scale-0'} transition duration-100`}>
@@ -69,6 +78,12 @@ const Game = ({ gameInfo }: GameObj) => {
                         <span>Invite Code: coming soon...</span>
                         <h1 className='text-lg font-bold'>custom score</h1>
                         <input className='text-black text-center rounded-md' type="number" value={pointsAwarded} onChange={(e: React.FormEvent<HTMLInputElement>) => setPointsAwarded(Number.parseInt(e.currentTarget.value))} />
+                        <h1 className='text-lg font-bold'>Current Board</h1>
+                        <div>
+                            <button onClick={previosBoard}> {'<<'} </button>
+                            <span className='mx-2'>{currentBoard + 1}</span>
+                            <button onClick={nextBoard}>{'>>'}</button>
+                        </div>
                         <div>
                             <h2 className='text-lg font-medium'>Number of players</h2>
                             <span className='text-2xl font-bold'>{numberOfPlayers}</span>

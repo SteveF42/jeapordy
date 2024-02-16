@@ -5,7 +5,6 @@ export const getUserCreatedBoards = async () => {
     const res = await fetch(process.env.NEXTAUTH_URL + '/api/boardCreate', {
         method: "GET",
         headers: headers(),
-        credentials: 'include',
         next:{
             revalidate:0
         }
@@ -20,6 +19,5 @@ export const createNewBoard = async () => {
     const res = await fetch('/api/boardCreate', {
         method: "POST",
         headers: headers(),
-        credentials: "include"
     })
 }

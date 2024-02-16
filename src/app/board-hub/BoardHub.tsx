@@ -11,12 +11,8 @@ const BoardHub = ({ userGames }: { userGames: any }) => {
     //API call will populate this later on
     const [myBoards, setMyBoards] = useState([]);
     const [newBoardTitle, setNewBoardTitle] = useState('')
+    const [submitted, setSubmitted] = useState(false);
     const router = useRouter();
-
-    //idk if this is good but its legit the only thing that actually made this shit work
-    // useEffect(() => {
-    //   router.refresh()
-    // }, [])
     
 
     const overlayRef = useRef<HTMLDivElement>(null)
@@ -35,6 +31,7 @@ const BoardHub = ({ userGames }: { userGames: any }) => {
     const createNewBoard = async (e: React.FormEvent<HTMLButtonElement>) => {
         //send redirect 
         e.preventDefault();
+        setSubmitted(true);
         const res = await fetch('/api/boardCreate', {
             method: "POST",
             credentials: "include",
@@ -58,7 +55,7 @@ const BoardHub = ({ userGames }: { userGames: any }) => {
                     </div>
                     <h1 className='text-2xl'>Create New Board</h1>
                     <InputSecondary placeholder="Title" value={newBoardTitle} onChange={changeTitle()}></InputSecondary>
-                    <button className='bg-secondary p-2 flex flex-row items-center gap-1 rounded-md hover:bg-third text-white font-semibold mb-2' onClick={createNewBoard}>Create</button>
+                    <button className='bg-secondary p-2 flex flex-row items-center gap-1 rounded-md hover:bg-third text-white font-semibold mb-2 disabled:opacity-20' onClick={createNewBoard} disabled={submitted}>Create</button>
                 </div>
             </div>
             <div className='board-hub p-10 max-w-screen-2xl mx-auto'>
