@@ -7,7 +7,6 @@ import { dbConnect } from "../../../db";
 export const getUserCreatedBoards = async () => {
     await dbConnect();
     const session = await getServerSession(options);
-    console.log(session)
     if (!session)
         return []
     const userGames = await gameData.find({ author: session?.user?.name }).limit(20);

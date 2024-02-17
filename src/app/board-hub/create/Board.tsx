@@ -24,6 +24,16 @@ const Board = ({ gameInfo }: GameObj) => {
     const settingsOverlayRef = useRef(null)
     const router = useRouter()
     const { isVisible: displayCardSettings, setIsVisible: setDisplayCardSettings } = useOutsideClick(settingsOverlayRef);
+    const [docEdited, setDocEdited] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            if (docEdited) {
+                router.refresh();
+            }
+            clearTimeout(timeoutID);
+        }
+    }, [docEdited])
 
     const saveTimer = () => {
         clearTimeout(timeoutID);
@@ -154,9 +164,9 @@ const Board = ({ gameInfo }: GameObj) => {
     const saveBoard = async () => {
         gameInfo.boards = [...boardArr];
         const res = await updateBoardInDB({ gameInfo });
-        router.refresh()
+        if (!docEdited)
+            setDocEdited(true);
         if (res.ok) {
-            console.log(res)
             setSaved(true);
             setIsSaving(true);
             setTimeout(() => {

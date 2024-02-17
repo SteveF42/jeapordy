@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, { params }: any) {
     currentGame.boards.push(newBoard._id);
     currentGame.save();
     newBoard.save();
-    revalidatePath('/board-hub/create')
+    revalidatePath('/board-hub','layout');
     return Response.json(newBoard, { status: 201 })
 }
 
@@ -42,7 +42,7 @@ export async function DELETE(req: NextRequest, { params }: any) {
     const currentGame = await gameData.findById(params.boardID);
     currentGame.boards = currentGame.boards.filter((x: any) => x._id != body?.boardID)
     currentGame.save();
-    revalidatePath('/board-hub/create')
+    revalidatePath('/board-hub','layout')
     return Response.json({ currentGame }, { status: 200 });
 }
 
@@ -63,6 +63,6 @@ export async function PATCH(req: NextRequest, { params }: any) {
         title: body.title,
         lastModified: Date.now()
     });
-    revalidatePath('/board-hub/create')
+    revalidatePath('/board-hub','layout')
     return Response.json(res)
 }

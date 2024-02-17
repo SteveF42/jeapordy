@@ -48,9 +48,6 @@ export const createNewBoard = async (id: string): Promise<BoardObj> => {
     // const session = await getServerSession();
     const res = await fetch('/api/board/' + id, {
         method: 'POST',
-        body: JSON.stringify({
-            // name: session?.user?.name
-        })
     })
     return await res.json()
 }
