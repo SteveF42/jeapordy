@@ -17,13 +17,6 @@ services:
       - NEXTAUTH_SECRET=$NEXTAUTH_SECRET
       - NEXTAUTH_URL=$NEXTAUTH_URL
       - NEXTAUTH_URL_INTERNAL=$NEXTAUTH_URL_INTERNAL
-# uncomment to run a mongo container and connect to it using the commented out environment variable
-#   db:
-#     image: mongo:6.0.4
-#     ports:
-#       - 27017:27017
-#     volumes:
-#       - dysh:/data/db
 
 volumes:
   img-store:
