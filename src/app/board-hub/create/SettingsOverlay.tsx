@@ -1,6 +1,9 @@
 import { PrimaryButton } from "@/components/Buttons"
-import { BoardObj } from "./util"
+import { BoardObj, uploadMedia } from "./util"
 import { SetStateAction, useEffect, useState } from "react";
+import { File } from "buffer";
+import axios from "@/api/axios";
+import { set } from "mongoose";
 
 type props = {
     boardInfo: BoardObj,
@@ -14,11 +17,19 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
     const [cardValue, setCardValue] = useState<number>(0);
     const [cardQuestion, setCardQuestion] = useState<string>('');
     const [cardAnswer, setCardAnswer] = useState<string>('');
+    const [cardImg, setCardImg] = useState<string>('')
+    const [uploadMsg, setUploadMsg] = useState<string | null>(null);
+    const [uploadProgress, setUploadProgress] = useState({ started: false, progress: 0 })
+    const [file, setFile] = useState<any>(null);
+    const [isUploading, setIsUploading] = useState(false)
+
     useEffect(() => {
         const cardInfo = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]];
         setCardValue(cardInfo?.value);
         setCardQuestion(cardInfo?.question);
         setCardAnswer(cardInfo?.answer);
+        setCardImg(cardInfo?.image);
+        setUploadMsg(null)
         console.log(cardIdx);
     }, [cardIdx])
 
@@ -35,6 +46,7 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
         card.answer = cardAnswer;
         card.question = cardQuestion;
         card.value = cardValue;
+        card.image = cardImg;
 
         boardInfo.columns.forEach(x => {
             x.cards[cardIdx[0]].value = cardValue;
@@ -44,6 +56,37 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
         setBoardInfo(boardInfo);
         updateDisplay();
         saveBoard();
+    }
+
+    const handleUpload = () => {
+        if (!file) {
+            setUploadMsg('No file selected');
+            return;
+        }
+        setIsUploading(true);
+
+        const fd = new FormData()
+        const kb = 1024;
+        const mb = kb * kb;
+        if (file.size > mb * 8)
+            return alert('File too large, max size is 8MB');
+        
+        fd.append(file.name, file);
+        setUploadProgress({ started: true, progress: 0 });
+        setUploadMsg('Uploading...');
+        uploadMedia(file, setUploadProgress).then(res => {
+            console.log(res);
+            setUploadMsg('Upload successful');
+            setCardImg(res.getUrl);
+        }).catch(err => {
+            console.log(err);
+            setUploadMsg('Upload failed');
+        })
+    }
+
+    const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+        setFile(e.currentTarget?.files ? e.currentTarget.files[0] : null)
+        setIsUploading(false);
     }
 
     return (
@@ -59,7 +102,13 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
                     <textarea rows={8} cols={35} className="text-black rounded-md p-2" value={cardAnswer} onChange={updateText(setCardAnswer)} />
                 </div>
             </div>
-
+            <div className="">
+                {cardImg && <img src={cardImg} alt="card-img" className="w-40 h-40" />}
+                <input type="file" onChange={handleChange} />
+                <button className="bg-primary p-2 rounded-md font-semibold disabled:opacity-20" onClick={handleUpload} disabled={isUploading}>Upload</button>
+                {uploadProgress.started && <progress value={uploadProgress.progress} max="100" />}
+                {uploadMsg && <p>{uploadMsg}</p>}
+            </div>
             <div className="text-center">
                 <h2 className="font-medium text-base">Row Cost</h2>
                 <input id="card-cost" className='text-black rounded-md p-2 text-center' type='number' value={cardValue} min='1' step={1} onChange={updateText(setCardValue)} />

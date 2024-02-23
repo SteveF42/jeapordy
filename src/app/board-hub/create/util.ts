@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth"
-import { revalidatePath } from "next/cache"
+import axios from "@/api/axios"
 
 interface BoardObj {
     columns: {
@@ -8,7 +7,7 @@ interface BoardObj {
         {
             question: string,
             answer: string,
-            img: string,
+            image: string,
             value: number
         }[]
     }[],
@@ -23,6 +22,38 @@ export interface GameObj {
         boards: BoardObj[],
         _id: string,
     },
+}
+
+export const uploadMedia = async (file: File, setUploadProgress: (prev?: any) => void) => {
+    const payLoad = {
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size
+    }
+
+    const res = await axios.post('/api/media', payLoad, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        onUploadProgress: (e: any) => {
+            setUploadProgress((prev: any) => {
+                return {
+                    ...prev,
+                    progress: (e?.progress * 100)
+                }
+            })
+        }
+    })
+
+    const { putUrl, getUrl } = res.data;
+    const uploadRes = await fetch(putUrl, {
+        body: file,
+        method: 'PUT',
+        headers: {
+            'Content-Type': file.type
+        },
+    })
+    return { status: uploadRes.status, getUrl }
 }
 
 export const updateBoardInDB = async ({ gameInfo }: GameObj) => {
