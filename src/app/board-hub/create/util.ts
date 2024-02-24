@@ -46,7 +46,7 @@ export const uploadMedia = async (file: File, setUploadProgress: (prev?: any) =>
         }
     })
 
-    const { putUrl, getUrl } = res.data;
+    const { putUrl, getUrl, deleteUrl } = res.data;
     const uploadRes = await fetch(putUrl, {
         body: file,
         method: 'PUT',
@@ -54,7 +54,7 @@ export const uploadMedia = async (file: File, setUploadProgress: (prev?: any) =>
             'Content-Type': file.type
         },
     })
-    return { status: uploadRes.status, getUrl }
+    return { status: uploadRes.status, getUrl, deleteUrl }
 }
 
 export const updateBoardInDB = async ({ gameInfo }: GameObj) => {

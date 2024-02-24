@@ -93,6 +93,13 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
 
         try {
             const res = await uploadMedia(file, setUploadProgress)
+            if (cardImg) {
+                fetch('/api/media', {
+                    method: 'DELETE',
+                    body: JSON.stringify({ url: cardImg }),
+                    headers: { 'Content-Type': 'application/json' }
+                })
+            }
             setUploadMsg('Upload successful');
             setCardImg(res.getUrl);
             return { getUrl: res.getUrl, err: null };
@@ -123,7 +130,7 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
                 </div>
             </div>
             <div className="flex justify-center items-center gap-4">
-                {cardImg && <img src={cardImg} alt="card-img" className="h-40"/>}
+                {cardImg && <img src={cardImg} alt="card-img" className="h-40" />}
                 <input type="file" onChange={handleChange} key={randomkey} />
                 {/* <button className="bg-primary p-2 rounded-md font-semibold disabled:opacity-20" onClick={handleUpload} disabled={isUploading}>Upload</button> */}
                 {uploadProgress.started && <progress value={uploadProgress.progress} max="100" />}
