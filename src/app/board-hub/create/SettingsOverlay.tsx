@@ -47,7 +47,11 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
     const updateCardEntry = async () => {
         let getUrl = cardImg;
         if (file) {
-            getUrl = await handleUpload();
+            const { getUrl: newUrl, err }: any = await handleUpload();
+            if (err) {
+                return;
+            }
+            getUrl = newUrl;
         }
 
         const card = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]]
@@ -72,6 +76,10 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
             setUploadMsg('No file selected');
             return;
         }
+        if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+            alert('Invalid file type')
+            return { getUrl: cardImg, err: null };
+        }
 
         const fd = new FormData()
         const kb = 1024;
@@ -87,11 +95,11 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
             const res = await uploadMedia(file, setUploadProgress)
             setUploadMsg('Upload successful');
             setCardImg(res.getUrl);
-            return res.getUrl;
+            return { getUrl: res.getUrl, err: null };
         } catch (err) {
             console.log(err);
             setUploadMsg('Upload failed');
-            return '';
+            return { getUrl: null, err };
         }
     }
 
@@ -114,9 +122,9 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
                     <textarea rows={8} cols={35} className="text-black rounded-md p-2" value={cardAnswer} onChange={updateText(setCardAnswer)} />
                 </div>
             </div>
-            <div className="">
-                {cardImg && <img src={cardImg} alt="card-img" className="w-40 h-40" />}
-                <input type="file" onChange={handleChange} key={randomkey}/>
+            <div className="flex justify-center items-center gap-4">
+                {cardImg && <img src={cardImg} alt="card-img" className="h-40"/>}
+                <input type="file" onChange={handleChange} key={randomkey} />
                 {/* <button className="bg-primary p-2 rounded-md font-semibold disabled:opacity-20" onClick={handleUpload} disabled={isUploading}>Upload</button> */}
                 {uploadProgress.started && <progress value={uploadProgress.progress} max="100" />}
                 {uploadMsg && <p>{uploadMsg}</p>}

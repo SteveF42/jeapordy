@@ -66,8 +66,11 @@ const Game = ({ gameInfo }: GameObj) => {
     return (
         <>
             <div className={`absolute w-full h-[90%] p-6 text-white z-20 ${questionVisible ? 'scale-100' : 'scale-0'} transition duration-100`}>
-                <div className='bg-third w-full h-full rounded-md transition p-8 flex hover:cursor-pointer' ref={questionRef} onClick={revealAnswer}>
-                    <h1 className='text-center text-6xl text-wrap w-[25ch] m-auto'>{!showAnswer ? getCurrentSquare()?.question : getCurrentSquare()?.answer}</h1>
+                <div className='bg-third w-full h-full rounded-md transition p-8 flex flex-col gap-y-8 hover:cursor-pointer justify-center items-center' ref={questionRef} onClick={revealAnswer}>
+                    <h1 className='text-center text-5xl text-wrap w-[25ch]'>{!showAnswer ? getCurrentSquare()?.question : getCurrentSquare()?.answer}</h1>
+                    <div className='max-h-[400px]'>
+                        <img src={getCurrentSquare()?.image} className='h-full rounded-md'></img>
+                    </div>
                 </div>
             </div>
             <div className={`relative p-6 ${questionVisible && 'hidden'} transition`}>
