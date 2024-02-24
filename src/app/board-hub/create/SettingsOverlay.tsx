@@ -21,7 +21,7 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
     const [uploadMsg, setUploadMsg] = useState<string | null>(null);
     const [uploadProgress, setUploadProgress] = useState({ started: false, progress: 0 })
     const [file, setFile] = useState<any>(null);
-    const [isUploading, setIsUploading] = useState(false)
+    const [randomkey, setRandomkey] = useState(Math.random().toString(36))
 
     useEffect(() => {
         const cardInfo = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]];
@@ -30,6 +30,9 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
         setCardAnswer(cardInfo?.answer);
         setCardImg(cardInfo?.image);
         setUploadMsg(null)
+        setFile(null);
+        setUploadProgress({ started: false, progress: 0 })
+        setRandomkey(Math.random().toString(36))
         console.log(cardIdx);
     }, [cardIdx])
 
@@ -41,52 +44,61 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
         }
     }
 
-    const updateCardEntry = () => {
+    const updateCardEntry = async () => {
+        let getUrl = cardImg;
+        if (file) {
+            getUrl = await handleUpload();
+        }
+
         const card = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]]
         card.answer = cardAnswer;
         card.question = cardQuestion;
         card.value = cardValue;
-        card.image = cardImg;
+        card.image = getUrl;
 
         boardInfo.columns.forEach(x => {
             x.cards[cardIdx[0]].value = cardValue;
             x.cards.sort((a, b) => a.value - b.value);
         })
 
+
         setBoardInfo(boardInfo);
         updateDisplay();
         saveBoard();
     }
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
         if (!file) {
             setUploadMsg('No file selected');
             return;
         }
-        setIsUploading(true);
 
         const fd = new FormData()
         const kb = 1024;
         const mb = kb * kb;
         if (file.size > mb * 8)
             return alert('File too large, max size is 8MB');
-        
+
         fd.append(file.name, file);
         setUploadProgress({ started: true, progress: 0 });
         setUploadMsg('Uploading...');
-        uploadMedia(file, setUploadProgress).then(res => {
-            console.log(res);
+
+        try {
+            const res = await uploadMedia(file, setUploadProgress)
             setUploadMsg('Upload successful');
             setCardImg(res.getUrl);
-        }).catch(err => {
+            return res.getUrl;
+        } catch (err) {
             console.log(err);
             setUploadMsg('Upload failed');
-        })
+            return '';
+        }
     }
+
+
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         setFile(e.currentTarget?.files ? e.currentTarget.files[0] : null)
-        setIsUploading(false);
     }
 
     return (
@@ -104,8 +116,8 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
             </div>
             <div className="">
                 {cardImg && <img src={cardImg} alt="card-img" className="w-40 h-40" />}
-                <input type="file" onChange={handleChange} />
-                <button className="bg-primary p-2 rounded-md font-semibold disabled:opacity-20" onClick={handleUpload} disabled={isUploading}>Upload</button>
+                <input type="file" onChange={handleChange} key={randomkey}/>
+                {/* <button className="bg-primary p-2 rounded-md font-semibold disabled:opacity-20" onClick={handleUpload} disabled={isUploading}>Upload</button> */}
                 {uploadProgress.started && <progress value={uploadProgress.progress} max="100" />}
                 {uploadMsg && <p>{uploadMsg}</p>}
             </div>

@@ -1,4 +1,5 @@
 import axios from "@/api/axios"
+axios.defaults.baseURL = process.env.NEXTAUTH_URL
 
 interface BoardObj {
     columns: {
