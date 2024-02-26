@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type props = {
     isVisible: boolean,
@@ -9,7 +9,12 @@ type props = {
 
 const ConfirmDelete = ({ isVisible, setIsVisible, deleteBoard, elementRef }: props) => {
     const [isDeleted, setIsDeleted] = useState(false);
-
+    useEffect(() => {
+        if (isVisible) {
+            setIsDeleted(false)
+        }
+    }, [isVisible])
+    
     const confirmDeletion = () => {
         setIsDeleted(true)
         setIsVisible(false)

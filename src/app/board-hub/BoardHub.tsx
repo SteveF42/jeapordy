@@ -2,7 +2,7 @@
 
 import BoardCard from '@/components/boardCard/BoardCard';
 import { InputSecondary } from '@/components/Inputs';
-import { FormEvent, MutableRefObject, useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { BsPlus, BsX } from 'react-icons/bs';
 import useOutSideClick from '@/hooks/useOutsideClick'
 import { useRouter } from 'next/navigation';

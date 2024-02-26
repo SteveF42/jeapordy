@@ -1,9 +1,6 @@
 import { PrimaryButton } from "@/components/Buttons"
 import { BoardObj, uploadMedia } from "./util"
 import { SetStateAction, useEffect, useState } from "react";
-import { File } from "buffer";
-import axios from "@/api/axios";
-import { set } from "mongoose";
 
 type props = {
     boardInfo: BoardObj,
