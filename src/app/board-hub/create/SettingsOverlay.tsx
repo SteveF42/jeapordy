@@ -30,7 +30,6 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
         setFile(null);
         setUploadProgress({ started: false, progress: 0 })
         setRandomkey(Math.random().toString(36))
-        console.log(cardIdx);
     }, [cardIdx])
 
 
@@ -51,7 +50,13 @@ const SettingsOverlay = ({ boardInfo, cardIdx, updateDisplay, setBoardInfo, save
             getUrl = newUrl;
         }
 
+
         const card = boardInfo.columns[cardIdx[1]].cards[cardIdx[0]]
+        if (cardAnswer === card.answer && cardQuestion === card.question && cardValue === card.value && getUrl === card.image)
+            return;
+
+        
+
         card.answer = cardAnswer;
         card.question = cardQuestion;
         card.value = cardValue;
